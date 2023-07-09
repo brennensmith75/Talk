@@ -1,6 +1,6 @@
 import { UseChatHelpers } from 'ai/react'
 import * as React from 'react'
-import Textarea from 'react-textarea-autosize'
+// import Textarea from 'react-textarea-autosize' // has some SSR issue - ReferenceError: document is not defined
 
 import Link from 'next/link'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -130,7 +130,7 @@ export function PromptForm({
             </div>
           </PopoverContent>
         </Popover>
-        <Textarea
+        <textarea
           ref={inputRef}
           tabIndex={0}
           onKeyDown={onKeyDown}
