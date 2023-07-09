@@ -25,6 +25,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
       <div className="p-8 border rounded-lg bg-background">
         <h1 className="mb-2 text-lg font-semibold">
           Welcome to 🐣 Smol Talk!
+          <small className="text-xs text-transparent">find the secret password</small>
         </h1>
         {/* <p className="mb-2 leading-normal text-muted-foreground">
           This is an open source AI chatbot app forked from the{' '}

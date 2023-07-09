@@ -13,42 +13,6 @@ export interface Model<Type = string> {
 
 export const models: Model<ModelType>[] = [
   {
-    id: 'gpt-3.5-turbo',
-    name: 'gpt-3.5-turbo',
-    description:
-      'Most capable GPT-3.5 model and optimized for chat at 1/10th the cost of text-davinci-003. Will be updated with our latest model iteration 2 weeks after it is released.',
-    type: 'OpenAI',
-    tokens: '4,096 tokens',
-    strengths: 'Optimized for chat, cost-effective, regularly updated'
-  },
-  {
-    id: 'gpt-3.5-turbo-16k',
-    name: 'gpt-3.5-turbo-16k',
-    description:
-      'Same capabilities as the standard gpt-3.5-turbo model but with 4 times the context.',
-    type: 'OpenAI-Long',
-    tokens: '16,384 tokens',
-    strengths: 'Extended context capabilities'
-  },
-  {
-    id: 'gpt-3.5-turbo-0613',
-    name: 'gpt-3.5-turbo-0613',
-    description:
-      'Snapshot of gpt-3.5-turbo from June 13th 2023 with function calling data. Unlike gpt-3.5-turbo, this model will not receive updates, and will be deprecated 3 months after a new version is released.',
-    type: 'OpenAI',
-    tokens: '4,096 tokens',
-    strengths: 'Function calling data, snapshot model'
-  },
-  {
-    id: 'gpt-3.5-turbo-16k-0613',
-    name: 'gpt-3.5-turbo-16k-0613',
-    description:
-      'Snapshot of gpt-3.5-turbo-16k from June 13th 2023. Unlike gpt-3.5-turbo-16k, this model will not receive updates, and will be deprecated 3 months after a new version is released.',
-    type: 'OpenAI-Long',
-    tokens: '16,384 tokens',
-    strengths: 'Extended context capabilities, snapshot model'
-  },
-  {
     id: 'gpt-4',
     name: 'gpt-4',
     description:
@@ -83,6 +47,42 @@ export const models: Model<ModelType>[] = [
       'Snapshot of gpt-4-32 from June 13th 2023. This model will not receive updates, and will be deprecated 3 months after a new version is released.',
     type: 'OpenAI-Long',
     tokens: '32,768 tokens',
+    strengths: 'Extended context capabilities, snapshot model'
+  },
+  {
+    id: 'gpt-3.5-turbo',
+    name: 'gpt-3.5-turbo',
+    description:
+      'Most capable GPT-3.5 model and optimized for chat at 1/10th the cost of text-davinci-003. Will be updated with our latest model iteration 2 weeks after it is released.',
+    type: 'OpenAI',
+    tokens: '4,096 tokens',
+    strengths: 'Optimized for chat, cost-effective, regularly updated'
+  },
+  {
+    id: 'gpt-3.5-turbo-16k',
+    name: 'gpt-3.5-turbo-16k',
+    description:
+      'Same capabilities as the standard gpt-3.5-turbo model but with 4 times the context.',
+    type: 'OpenAI-Long',
+    tokens: '16,384 tokens',
+    strengths: 'Extended context capabilities'
+  },
+  {
+    id: 'gpt-3.5-turbo-0613',
+    name: 'gpt-3.5-turbo-0613',
+    description:
+      'Snapshot of gpt-3.5-turbo from June 13th 2023 with function calling data. Unlike gpt-3.5-turbo, this model will not receive updates, and will be deprecated 3 months after a new version is released.',
+    type: 'OpenAI',
+    tokens: '4,096 tokens',
+    strengths: 'Function calling data, snapshot model'
+  },
+  {
+    id: 'gpt-3.5-turbo-16k-0613',
+    name: 'gpt-3.5-turbo-16k-0613',
+    description:
+      'Snapshot of gpt-3.5-turbo-16k from June 13th 2023. Unlike gpt-3.5-turbo-16k, this model will not receive updates, and will be deprecated 3 months after a new version is released.',
+    type: 'OpenAI-Long',
+    tokens: '16,384 tokens',
     strengths: 'Extended context capabilities, snapshot model'
   },
   {

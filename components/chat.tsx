@@ -1,6 +1,6 @@
 'use client'
 
-import { useChat, type Message } from 'ai/react'
+import { useChat, type Message, UseChatOptions } from 'ai/react'
 
 import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
@@ -22,14 +22,29 @@ import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
 import { Model, models } from '@/constants/models'
 import { AlertAuth } from './alert-auth'
+import { SmolTalkMessage } from '@/lib/types'
+import { Session } from '@supabase/supabase-js'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
   id?: string
+  session: Session
 }
 
-export function Chat({ id, initialMessages, className }: ChatProps) {
+function useSmolTalkChat(opts: UseChatOptions & {
+  initialMessages?: SmolTalkMessage[] // overriding just to fit our needs
+}) {
+  const { initialMessages, ...rest } = opts
+  return useChat({
+    ...rest,
+    initialMessages: initialMessages?.map(message => ({
+      ...message,
+    }))
+  })
+}
+
+export function Chat({ session, id, initialMessages, className }: ChatProps) {
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
     null
@@ -40,14 +55,14 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
   const { messages, append, reload, stop, isLoading, input, setInput, error } =
-    useChat({
+    useSmolTalkChat({
       initialMessages,
       id,
       body: {
         id,
-      //   previewToken
-      previewToken,
-      model: model
+        //   previewToken
+        previewToken,
+        model: model
       },
       // SWYXTODO: check this 401 issue?
       onResponse(response) {
@@ -83,6 +98,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         setInput={setInput}
         setModel={setModel}
         model={model}
+        session={session}
       />
 
       <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>

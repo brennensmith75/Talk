@@ -6,6 +6,8 @@ import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
 import { IconRefresh, IconStop } from '@/components/ui/icons'
 // import { FooterText } from '@/components/footer'
 import { Model } from '@/constants/models'
+import { upsertChat } from '@/app/actions'
+import { Session } from '@supabase/supabase-js'
 
 export interface ChatPanelProps
   extends Pick<
@@ -21,6 +23,7 @@ export interface ChatPanelProps
   id?: string
   setModel: (model: Model) => void
   model: Model
+  session: Session
 }
 
 export function ChatPanel({
@@ -33,7 +36,8 @@ export function ChatPanel({
   setInput,
   setModel,
   model,
-  messages
+  messages,
+  session
 }: ChatPanelProps) {
   return (
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
@@ -69,6 +73,16 @@ export function ChatPanel({
                 id,
                 content: value,
                 role: 'user'
+              })
+              id = id ?? Math.random().toString(36).slice(2) // random id up to 11 chars
+              await upsertChat({
+                chat_id: id,
+                title: 'TODO: make title: '+ id,
+                userId: session?.user?.id, 
+                messages,
+                createdAt: new Date(),
+                path: "todo",
+                sharePath: "todo"
               })
             }}
             input={input}

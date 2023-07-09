@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 import { PopoverProps } from '@radix-ui/react-popover'
-
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
+// import { cn } from '@/lib/utils'
 import { useMutationObserver } from '@/lib/hooks/use-mutation-observer'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,7 +27,11 @@ import {
 } from '@/components/ui/popover'
 import { Model, models, types } from '@/constants/models'
 import { Label } from '@/components/ui/label'
-import { IconPlus, IconArrowRight, IconChevronUpDown } from '@/components/ui/icons'
+import {
+  IconPlus,
+  IconArrowRight,
+  IconChevronUpDown
+} from '@/components/ui/icons'
 
 interface ModelSelectorProps extends PopoverProps {
   setModel: (model: Model) => void
@@ -57,7 +61,7 @@ export function ModelSelector({
   ...props
 }: ModelSelectorProps) {
   const [open, setOpen] = React.useState(false)
-
+  const router = useRouter()
   const [peekedModel, setPeekedModel] = React.useState<Model>(models[0])
 
   return (
@@ -89,7 +93,15 @@ export function ModelSelector({
         <PopoverContent align="end" className="w-[250px] p-0">
           <div className="flex flex-col items-start px-2 py-4 space-y-2 border-b-2 rounded-t-2xl bg-background text-foreground border-b-foreground">
             <Link href="/" className="h-auto p-0 text-sm">
-              <Button variant="link" className="h-auto p-0 text-sm">
+              <Button
+                onClick={e => {
+                  e.preventDefault()
+                  router.refresh()
+                  router.push('/')
+                }}
+                variant="link"
+                className="h-auto p-0 text-sm"
+              >
                 <IconPlus className="mr-2 text-muted-foreground" />
                 New Chat
               </Button>
@@ -117,7 +129,7 @@ export function ModelSelector({
               side="left"
               align="start"
               forceMount
-              className="hidden min-h-[280px] 2xl:block"
+              className="hidden min-h-[280px] lg:block"
             >
               <div className="grid gap-2">
                 <h4 className="font-medium leading-none">{peekedModel.name}</h4>

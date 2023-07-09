@@ -11,6 +11,33 @@ import { auth } from '@/auth'
 
 const supabase = createServerActionClient<Database>({ cookies })
 
+function nanoid() {
+  return Math.random().toString(36).slice(2) // random id up to 11 chars
+}
+
+export async function upsertChat(chat: Chat) {
+  const { error } = await supabase
+    .from('chats')
+    .upsert(
+      {
+        id: chat.chat_id || nanoid(),
+        userId: chat.userId,
+        payload: chat
+      },
+      {
+        onConflict: 'handle',
+    })
+  if (error) {
+    console.log('upsertChat error', error)
+    return {
+      error: 'Unauthorized'
+    }
+  } else {
+    return null
+  }
+}
+
+
 export async function getChats(userId?: string | null) {
   if (!userId) {
     return []
@@ -68,22 +95,6 @@ export async function clearChats() {
       error: 'Unauthorized'
     }
   }
-
-  // const chats: string[] = await kv.zrange(`user:chat:${session.user.id}`, 0, -1)
-
-  // const pipeline = kv.pipeline()
-
-  // for (const chat of chats) {
-  //   pipeline.del(chat)
-  //   pipeline.zrem(`user:chat:${session.user.id}`, chat)
-  // }
-
-  // if (chats.length > 0) {
-  //   await pipeline?.exec()
-  // }
-
-  // revalidatePath('/')
-  // return redirect('/')
 }
 
 export async function getSharedChat(id: string) {
