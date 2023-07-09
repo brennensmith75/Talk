@@ -26,7 +26,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
         <h1 className="mb-2 text-lg font-semibold">
           Welcome to 🐣 Smol Talk!
         </h1>
-        <p className="mb-2 leading-normal text-muted-foreground">
+        {/* <p className="mb-2 leading-normal text-muted-foreground">
           This is an open source AI chatbot app forked from the{' '}
           <ExternalLink href="https://github.com/supabase-community/vercel-ai-chatbot/">Next.js/Supabase template</ExternalLink>,
           that supports GPT3, 4, and Anthropic calling.
@@ -43,7 +43,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
               {message.heading}
             </Button>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   )

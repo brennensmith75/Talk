@@ -76,7 +76,7 @@ export function PromptForm({
           spellCheck={false}
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
-        <div className="absolute right-0 flex top-4 sm:right-4">
+        <div className="right-0 flex justify-center sm:justify-normal sm:absolute top-4 sm:right-4">
           <Button
             id="smol-submitbtn"
             type="submit"
