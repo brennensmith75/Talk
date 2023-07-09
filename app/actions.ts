@@ -68,6 +68,22 @@ export async function clearChats() {
       error: 'Unauthorized'
     }
   }
+
+  // const chats: string[] = await kv.zrange(`user:chat:${session.user.id}`, 0, -1)
+
+  // const pipeline = kv.pipeline()
+
+  // for (const chat of chats) {
+  //   pipeline.del(chat)
+  //   pipeline.zrem(`user:chat:${session.user.id}`, chat)
+  // }
+
+  // if (chats.length > 0) {
+  //   await pipeline?.exec()
+  // }
+
+  // revalidatePath('/')
+  // return redirect('/')
 }
 
 export async function getSharedChat(id: string) {

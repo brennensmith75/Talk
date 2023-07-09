@@ -6,19 +6,37 @@ import { Database } from '@/lib/db_types'
 
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
+// import { z } from 'zod'
+// import { zValidateReq } from '@/lib/validate'
+import { envs } from '@/constants/envs'
 
 export const runtime = 'edge'
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
-})
+// const configuration = new Configuration({
+//   apiKey: process.env.OPENAI_API_KEY
+// })
 
-const openai = new OpenAIApi(configuration)
+// const openai = new OpenAIApi(configuration)
+
+// const schema = z.object({
+//   id: z.string().optional(),
+//   messages: z.array(
+//     z.object({
+//       content: z.string(),
+//       role: z.enum(['user', 'assistant', 'system']),
+//       name: z.string().optional()
+//     })
+//   ),
+//   previewToken: z.string().nullable().optional(),
+//   model: z.object({
+//     id: z.string()
+//   })
+// })
 
 export async function POST(req: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies })
   const json = await req.json()
-  const { messages, previewToken } = json
+  const { messages, previewToken, model } = json
   const userId = (await auth())?.user.id
 
   if (!userId) {
@@ -27,14 +45,19 @@ export async function POST(req: Request) {
     })
   }
 
-  if (previewToken) {
-    configuration.apiKey = previewToken
-  }
+  // if (previewToken) {
+  //   configuration.apiKey = previewToken
+  // }
+  const configuration = new Configuration({
+    apiKey: previewToken || envs.OPENAI_API_KEY
+  })
+
+  const openai = new OpenAIApi(configuration)
 
   const res = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
+    model: model.id || 'gpt-3.5-turbo',
     messages,
-    temperature: 0.7,
+    temperature: 0.5,
     stream: true
   })
 

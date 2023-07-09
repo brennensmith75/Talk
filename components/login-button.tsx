@@ -10,6 +10,7 @@ import { IconGitHub, IconSpinner } from '@/components/ui/icons'
 interface LoginButtonProps extends ButtonProps {
   showGithubIcon?: boolean
   text?: string
+  provider?: string
 }
 
 export function LoginButton({

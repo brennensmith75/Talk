@@ -59,7 +59,10 @@ export function UserMenu({ user }: UserMenuProps) {
                   : null}
               </div>
             )}
-            <span className="ml-2">{user?.user_metadata.name}</span>
+            {/* <span className="ml-2">{user?.user_metadata.name}</span>
+            <span className="w-20 ml-2 overflow-hidden text-ellipsis whitespace-nowrap md:w-full ">
+              {user?.name}
+            </span> */}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent sideOffset={8} align="start" className="w-[180px]">

@@ -20,6 +20,8 @@ import { useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
+import { Model, models } from '@/constants/models'
+import { AlertAuth } from './alert-auth'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -32,34 +34,44 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     'ai-token',
     null
   )
+
+  const [model, setModel] = useState<Model>(models[0])
+
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
-  const { messages, append, reload, stop, isLoading, input, setInput } =
+  const { messages, append, reload, stop, isLoading, input, setInput, error } =
     useChat({
       initialMessages,
       id,
       body: {
         id,
-        previewToken
+      //   previewToken
+      previewToken,
+      model: model
       },
+      // SWYXTODO: check this 401 issue?
       onResponse(response) {
         if (response.status === 401) {
           toast.error(response.statusText)
         }
-      }
+      },
     })
+
+  const isAuthError = error?.message.includes('Unauthorized')
+
   return (
     <>
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
-        {messages.length ? (
+        {messages.length > 0 ? (
           <>
             <ChatList messages={messages} />
             <ChatScrollAnchor trackVisibility={isLoading} />
           </>
-        ) : (
+        ) : !isLoading ? (
           <EmptyScreen setInput={setInput} />
-        )}
+        ) : null}
       </div>
+      {isAuthError && <AlertAuth />}
       <ChatPanel
         id={id}
         isLoading={isLoading}
@@ -69,6 +81,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         messages={messages}
         input={input}
         setInput={setInput}
+        setModel={setModel}
+        model={model}
       />
 
       <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>
