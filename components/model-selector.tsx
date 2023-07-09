@@ -31,6 +31,7 @@ import { IconPlus, IconArrowRight, IconChevronUpDown } from '@/components/ui/ico
 
 interface ModelSelectorProps extends PopoverProps {
   setModel: (model: Model) => void
+  setInput: React.Dispatch<React.SetStateAction<string>>
   model: Model
 }
 
@@ -51,6 +52,7 @@ const exampleMessages = [
 
 export function ModelSelector({
   setModel,
+  setInput,
   model,
   ...props
 }: ModelSelectorProps) {
@@ -85,7 +87,7 @@ export function ModelSelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
-          <div className="flex flex-col items-start px-2 py-4 space-y-2 border-b-2  rounded-t-2xl bg-background text-foreground border-b-foreground">
+          <div className="flex flex-col items-start px-2 py-4 space-y-2 border-b-2 rounded-t-2xl bg-background text-foreground border-b-foreground">
             <Link href="/" className="h-auto p-0 text-sm">
               <Button variant="link" className="h-auto p-0 text-sm">
                 <IconPlus className="mr-2 text-muted-foreground" />

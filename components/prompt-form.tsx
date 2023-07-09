@@ -87,7 +87,7 @@ export function PromptForm({
             <span className="sr-only">Send message</span>
           </Button>
 
-          <ModelSelector setModel={setModel} model={model} />
+          <ModelSelector setModel={setModel} setInput={setInput} model={model} />
         </div>
       </div>
     </form>
