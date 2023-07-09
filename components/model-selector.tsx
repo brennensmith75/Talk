@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { PopoverProps } from '@radix-ui/react-popover'
 
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useMutationObserver } from '@/lib/hooks/use-mutation-observer'
 import { Button } from '@/components/ui/button'
@@ -25,12 +26,28 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { Model, models, types } from '@/constants/models'
-import { IconCheck, IconChevronUpDown } from '@/components/ui/icons'
+import { Label } from '@/components/ui/label'
+import { IconPlus, IconArrowRight, IconChevronUpDown } from '@/components/ui/icons'
 
 interface ModelSelectorProps extends PopoverProps {
   setModel: (model: Model) => void
   model: Model
 }
+
+const exampleMessages = [
+  {
+    heading: 'Explain technical concepts',
+    message: `What is a "serverless function"?`
+  },
+  {
+    heading: 'Summarize an article',
+    message: 'Summarize the following article for a 2nd grader:'
+  },
+  {
+    heading: 'Draft an email',
+    message: `Draft an email to my boss about the following:`
+  }
+]
 
 export function ModelSelector({
   setModel,
@@ -68,6 +85,31 @@ export function ModelSelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
+          <div className="flex flex-col items-start px-2 py-4 space-y-2 border-b-2  rounded-t-2xl bg-background text-foreground border-b-foreground">
+            <Link href="/" className="h-auto p-0 text-sm">
+              <Button variant="link" className="h-auto p-0 text-sm">
+                <IconPlus className="mr-2 text-muted-foreground" />
+                New Chat
+              </Button>
+            </Link>
+
+            <Label className="mb-2 text-xs text-muted-foreground">
+              Template
+            </Label>
+            {exampleMessages.map((message, index) => (
+              <Button
+                key={index}
+                variant="link"
+                className="h-auto p-0 text-sm"
+                onClick={() => {
+                  setInput(message.message)
+                }}
+              >
+                <IconArrowRight className="mr-2 text-muted-foreground" />
+                {message.heading}
+              </Button>
+            ))}
+          </div>
           <HoverCard>
             <HoverCardContent
               side="left"

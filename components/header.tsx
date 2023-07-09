@@ -55,7 +55,7 @@ export async function Header() {
         </div>
       </div>
 
-      <div className="flex items-center justify-end space-x-2">
+      {/* <div className="flex items-center justify-end space-x-2">
         <a
           href="https://twitter.com/smolmodels"
           target="_blank"
@@ -64,7 +64,7 @@ export async function Header() {
           <span className="hidden sm:block">🐣 Smol Talk</span>
           <span className="sm:hidden">🐣 Talk</span>
         </a>
-      </div>
+      </div> */}
     </header>
   )
 }
