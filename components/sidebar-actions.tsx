@@ -86,7 +86,7 @@ export function SidebarActions({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              className="h-6 w-6 p-0 hover:bg-background"
+              className="w-6 h-6 p-0 hover:bg-background"
               onClick={() => setShareDialogOpen(true)}
             >
               <IconShare />
@@ -99,7 +99,7 @@ export function SidebarActions({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              className="h-6 w-6 p-0 hover:bg-background"
+              className="w-6 h-6 p-0 hover:bg-background"
               disabled={isRemovePending}
               onClick={() => setDeleteDialogOpen(true)}
             >
@@ -118,7 +118,7 @@ export function SidebarActions({
               Anyone with the URL will be able to view the shared chat.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-1 rounded-md border p-4 text-sm">
+          <div className="p-4 space-y-1 text-sm border rounded-md">
             <div className="font-medium">{chat.title}</div>
             <div className="text-muted-foreground">
               {formatDate(chat.createdAt)} · {chat.messages.length} messages
@@ -141,7 +141,6 @@ export function SidebarActions({
             <Button
               disabled={isSharePending}
               onClick={() => {
-                // @ts-expect-error TODO: fix this  Type 'Promise<void>' is not assignable to type 'VoidOrUndefinedOnly'
                 startShareTransition(async () => {
                   if (chat.sharePath) {
                     await new Promise(resolve => setTimeout(resolve, 500))
@@ -189,7 +188,6 @@ export function SidebarActions({
               disabled={isRemovePending}
               onClick={event => {
                 event.preventDefault()
-                // @ts-expect-error TODO: fix this  Type 'Promise<void>' is not assignable to type 'VoidOrUndefinedOnly'
                 startRemoveTransition(async () => {
                   const result = await removeChat({
                     id: chat.id,

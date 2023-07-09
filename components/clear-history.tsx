@@ -50,7 +50,6 @@ export function ClearHistory({ clearChats }: ClearHistoryProps) {
             disabled={isPending}
             onClick={event => {
               event.preventDefault()
-              // @ts-expect-error TODO: fix this type error
               startTransition(async () => {
                 const result = await clearChats()
 
