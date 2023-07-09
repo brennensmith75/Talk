@@ -46,6 +46,7 @@
     "react-textarea-autosize": "^8.4.1",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "smolai": "^0.0.10",
     "zod": "^3.21.4"
   },
   "devDependencies": {

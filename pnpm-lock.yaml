@@ -48,6 +48,7 @@ specifiers:
   react-textarea-autosize: ^8.4.1
   remark-gfm: ^3.0.1
   remark-math: ^5.1.1
+  smolai: ^0.0.10
   tailwind-merge: ^1.12.0
   tailwindcss: ^3.3.2
   tailwindcss-animate: ^1.0.5
@@ -88,6 +89,7 @@ dependencies:
   react-textarea-autosize: 8.5.2_i73ekzlbntu7jol6ph2fvy4mga
   remark-gfm: 3.0.1
   remark-math: 5.1.1
+  smolai: 0.0.10_zod@3.21.4
   zod: 3.21.4
 
 devDependencies:
@@ -4665,6 +4667,15 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /smolai/0.0.10_zod@3.21.4:
+    resolution: {integrity: sha512-dho7orDyeckXMLPOCifFihtYxUHz4wKhysZ1b0cJhDtu23c7X6ygbEn9PvTUsBD1vMdlnTDikUvxHHMvDtBM9g==}
+    engines: {node: '>=12'}
+    dependencies:
+      zod-to-json-schema: 3.21.3_zod@3.21.4
+    transitivePeerDependencies:
+      - zod
+    dev: false
+
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -5295,6 +5306,14 @@ packages:
 
   /yoga-wasm-web/0.3.3:
     resolution: {integrity: sha512-N+d4UJSJbt/R3wqY7Coqs5pcV0aUj2j9IaQ3rNj9bVCLld8tTGKRa2USARjnvZJWVx1NDmQev8EknoczaOQDOA==}
+    dev: false
+
+  /zod-to-json-schema/3.21.3_zod@3.21.4:
+    resolution: {integrity: sha512-09W/9oyxeF1/wWnzCb6MursW+lOzgKi91QwE7eTBbC+t/qgfuLsUVDai3lHemSQnQu/UONAcT/fv3ZnDvbTeKg==}
+    peerDependencies:
+      zod: ^3.21.4
+    dependencies:
+      zod: 3.21.4
     dev: false
 
   /zod/3.21.4:

@@ -61,10 +61,10 @@ export function ModelSelector({
             role="combobox"
             aria-expanded={open}
             aria-label="Select a model"
-            className="w-15 justify-between overflow-hidden text-ellipsis whitespace-nowrap"
+            className="justify-between overflow-hidden w-15 text-ellipsis whitespace-nowrap"
           >
             {model ? model.name : 'Select a model...'}
-            <IconChevronUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <IconChevronUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
@@ -81,7 +81,7 @@ export function ModelSelector({
                   {peekedModel.description}
                 </div>
                 {peekedModel.strengths ? (
-                  <div className="mt-4 grid gap-2">
+                  <div className="grid gap-2 mt-4">
                     <h5 className="text-sm font-medium leading-none">
                       Strengths
                     </h5>
@@ -151,12 +151,12 @@ function ModelItem({ model, isSelected, onSelect, onPeek }: ModelItemProps) {
       className="aria-selected:bg-primary aria-selected:text-primary-foreground"
     >
       {model.name}
-      <IconCheck
+      {/* <IconCheck
         className={cn(
           'ml-auto h-4 w-4',
           isSelected ? 'opacity-100' : 'opacity-0'
         )}
-      />
+      /> */}
     </CommandItem>
   )
 }
