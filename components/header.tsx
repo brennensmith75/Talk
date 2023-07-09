@@ -10,16 +10,15 @@ import { SidebarList } from '@/components/sidebar-list'
 import {
   IconGitHub,
   IconNextChat,
-  IconSeparator,
-  IconVercel
+  IconSeparator
 } from '@/components/ui/icons'
 import { SidebarFooter } from '@/components/sidebar-footer'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { ClearHistory } from '@/components/clear-history'
 import { UserMenu } from '@/components/user-menu'
-import { LoginButton } from '@/components/login-button'
-import { ModelSelector } from './model-selector'
-import { models, types } from '@/constants/models'
+// import { LoginButton } from '@/components/login-button'
+// import { ModelSelector } from './model-selector'
+// import { models, types } from '@/constants/models'
 
 export async function Header() {
   const session = await auth()
@@ -57,22 +56,12 @@ export async function Header() {
 
       <div className="flex items-center justify-end space-x-2">
         <a
-          target="_blank"
-          href="https://github.com/thorwebdev/vercel-ai-chatbot"
-          rel="noopener noreferrer"
-          className={cn(buttonVariants({ variant: 'outline' }))}
-        >
-          <IconGitHub />
-          <span className="hidden ml-2 md:flex">GitHub</span>
-        </a>
-        <a
-          href="https://github.com/thorwebdev/vercel-ai-chatbot"
+          href="https://twitter.com/smolmodels"
           target="_blank"
           className={cn(buttonVariants())}
         >
-          <IconVercel className="mr-2" />
-          <span className="hidden sm:block">Deploy to Vercel</span>
-          <span className="sm:hidden">Deploy</span>
+          <span className="hidden sm:block">🐣 Smol Talk</span>
+          <span className="sm:hidden">🐣 Talk</span>
         </a>
       </div>
     </header>

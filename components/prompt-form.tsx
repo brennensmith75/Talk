@@ -2,6 +2,7 @@ import { UseChatHelpers } from 'ai/react'
 import * as React from 'react'
 import Textarea from 'react-textarea-autosize'
 
+import Link from 'next/link'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Tooltip,
@@ -94,7 +95,7 @@ export function PromptForm({
           </TooltipTrigger>
           <TooltipContent>New Chat</TooltipContent>
         </Tooltip> */}
-              <IconPlus className="w-4 h-4" />
+              {/* <IconPlus className="w-4 h-4" /> */}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-65">
