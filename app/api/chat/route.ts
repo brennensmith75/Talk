@@ -1,5 +1,5 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { Configuration, OpenAIApi } from 'openai-edge'
+import { Configuration, OpenAIApi } from 'smolai'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
@@ -60,9 +60,11 @@ export async function POST(req: Request) {
     temperature: 0.5,
     stream: true
   })
-  const ls = await res.text()
-  console.log({ls})
-  
+  console.log('model', model)
+  console.log('res.headers')
+  for (const [key, value] of Object.entries(res.headers)) {
+    console.log(key + ': ' + value);
+  }
   const stream = OpenAIStream(res, {
     async onCompletion(completion) {
       const title = json.messages[0].content.substring(0, 100)
