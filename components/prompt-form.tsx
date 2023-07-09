@@ -99,7 +99,7 @@ export function PromptForm({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-65">
-            <div className="flex flex-col items-start mt-4 space-y-2">
+            <div className="flex flex-col items-start space-y-2">
               <Link href="/" className="h-auto p-0 text-sm">
                 <Button variant="link" className="h-auto p-0 text-sm">
                   <IconPlus className="mr-2 text-muted-foreground" />
@@ -107,10 +107,10 @@ export function PromptForm({
                 </Button>
               </Link>
 
-              <Label className="mb-2 text-xs text-muted-foreground">
+              {/* <Label className="mb-2 text-xs text-muted-foreground">
                 Models
               </Label>
-              <ModelSelector setModel={setModel} model={model} />
+              <ModelSelector setModel={setModel} model={model} /> */}
               <Label className="mb-2 text-xs text-muted-foreground">
                 Template
               </Label>
@@ -142,7 +142,7 @@ export function PromptForm({
           spellCheck={false}
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
-        <div className="absolute right-0 top-4 sm:right-4">
+        <div className="absolute right-0 flex top-4 sm:right-4">
           <Button
             id="smol-submitbtn"
             type="submit"
@@ -152,6 +152,8 @@ export function PromptForm({
             <IconArrowElbow />
             <span className="sr-only">Send message</span>
           </Button>
+
+          <ModelSelector setModel={setModel} model={model} />
         </div>
       </div>
     </form>

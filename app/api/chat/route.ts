@@ -60,8 +60,7 @@ export async function POST(req: Request) {
     temperature: 0.5,
     stream: true
   })
-  console.log('model', model)
-  console.log('res.headers')
+  
   for (const [key, value] of Object.entries(res.headers)) {
     console.log(key + ': ' + value);
   }
