@@ -25,7 +25,7 @@ export default async function ProfilePage() {
         </div>
       </div>
       <div className="px-4 py-6 md:px-6">
-        <div className="max-w-2xl mx-auto rounded-lg bg-white border p-6">
+        <div className="max-w-2xl mx-auto rounded-lg bg-background border p-6">
           <div className="space-y-6">
             <div className="space-y-6">
               <ProfileForm user={user} />

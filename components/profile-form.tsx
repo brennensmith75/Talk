@@ -106,7 +106,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className='dark:bg-secondary dark:text-white'>Submit</Button>
       </form>
     </Form>
   )
