@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input'
 
 import { useForm } from 'react-hook-form'
+import { Textarea } from './ui/textarea';
 
 const formSchema = z.object({
   username: z
@@ -28,7 +29,10 @@ const formSchema = z.object({
       message: 'Username must be at least 2 characters long'
     })
     .max(50),
-  email: z.string().email()
+  email: z.string().email(),
+  systemPrompt: z.string().max(1000, {
+    message: 'System prompt must be less than 1000 characters long'
+  })
 })
 
 interface ProfileFormProps {
@@ -40,7 +44,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: user?.user_metadata.user_name,
-      email: user?.user_metadata.email
+      email: user?.user_metadata.email,
+      systemPrompt: user?.user_metadata.system_prompt
     }
   })
 
@@ -69,7 +74,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </FormItem>
           )}
         />
-                <FormField
+        <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -80,6 +85,22 @@ export function ProfileForm({ user }: ProfileFormProps) {
               </FormControl>
               <FormDescription>
                 {/* Your public display name. */}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="systemPrompt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>System Prompt</FormLabel>
+              <FormControl>
+                <Textarea placeholder="System Prompt here" {...field} />
+              </FormControl>
+              <FormDescription>
+                Add some details about yourself for the system to consider when generating your responses. Provide any information you think will help the AI generate more useful responses.
               </FormDescription>
               <FormMessage />
             </FormItem>
