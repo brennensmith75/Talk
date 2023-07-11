@@ -89,7 +89,16 @@ export const models: Model<ModelType>[] = [
     id: 'claude-1',
     name: 'claude-1',
     description:
-      'Our largest model, ideal for a wide range of more complex tasks.',
+      "Claude's first model, ideal for a wide range of more complex tasks."
+    type: 'Anthropic',
+    tokens: '8k tokens',
+    strengths: 'Unsure'
+  },
+  {
+    id: 'claude-2',
+    name: 'claude-2',
+    description:
+      "Anthropic's largest model, ideal for a wide range of more complex tasks. Superior performance on tasks that require complex reasoning",
     type: 'Anthropic',
     tokens: '8k tokens',
     strengths: 'Unsure'
@@ -98,7 +107,7 @@ export const models: Model<ModelType>[] = [
     id: 'claude-instant-1',
     name: 'claude-instant-1',
     description:
-      'A smaller model with far lower latency, sampling at roughly 40 words/sec! Its output quality is somewhat lower than the latest claude-1 model, particularly for complex tasks. However, it is much less expensive and blazing fast. We believe that this model provides more than adequate performance on a range of tasks including text classification, summarization, and lightweight chat applications, as well as search result summarization.',
+      'A smaller model with far lower latency, high throughput sampling at roughly 40 words/sec! Its output quality is somewhat lower than the latest claude-1 model, particularly for complex tasks. However, it is much less expensive and blazing fast. We believe that this model provides more than adequate performance on a range of tasks including text classification, summarization, and lightweight chat applications, as well as search result summarization.',
     type: 'Anthropic',
     tokens: '8k tokens',
     strengths: 'Unsure'
