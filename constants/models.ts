@@ -89,7 +89,7 @@ export const models: Model<ModelType>[] = [
     id: 'claude-1',
     name: 'claude-1',
     description:
-      "Claude's first model, ideal for a wide range of more complex tasks."
+      "Claude's first model, ideal for a wide range of more complex tasks.",
     type: 'Anthropic',
     tokens: '8k tokens',
     strengths: 'Unsure'
