@@ -23,7 +23,7 @@ export interface ChatPanelProps
   id?: string
   setModel: (model: Model) => void
   model: Model
-  session: Session
+  userId?: string
 }
 
 export function ChatPanel({
@@ -37,7 +37,7 @@ export function ChatPanel({
   setModel,
   model,
   messages,
-  session
+  userId
 }: ChatPanelProps) {
   return (
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
@@ -78,7 +78,7 @@ export function ChatPanel({
               await upsertChat({
                 chat_id: id,
                 title: 'TODO: make title: '+ id,
-                userId: session?.user?.id, 
+                userId: userId || 'unknown-user-id', // TODO: try to get rid of unknown user id, higher up 
                 messages,
                 createdAt: new Date(),
                 path: "todo",

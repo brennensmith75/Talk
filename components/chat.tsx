@@ -29,7 +29,7 @@ const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
   id?: string
-  session: Session
+  userId?: string
 }
 
 function useSmolTalkChat(opts: UseChatOptions & {
@@ -44,7 +44,7 @@ function useSmolTalkChat(opts: UseChatOptions & {
   })
 }
 
-export function Chat({ session, id, initialMessages, className }: ChatProps) {
+export function Chat({ userId, id, initialMessages, className }: ChatProps) {
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
     null
@@ -98,7 +98,7 @@ export function Chat({ session, id, initialMessages, className }: ChatProps) {
         setInput={setInput}
         setModel={setModel}
         model={model}
-        session={session}
+        userId={userId}
       />
 
       <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>
