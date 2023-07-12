@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { type Session } from '@supabase/auth-helpers-nextjs'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { IconExternalLink } from '@/components/ui/icons'
+import { ChatBubbleIcon, HomeIcon } from '@radix-ui/react-icons'
 
 export interface UserMenuProps {
   user: Session['user']
@@ -26,6 +27,7 @@ function getUserInitials(name: string) {
 
 export function UserMenu({ user }: UserMenuProps) {
   const router = useRouter()
+  const path = usePathname();
 
   // Create a Supabase client configured to use cookies
   const supabase = createClientComponentClient()
@@ -39,7 +41,7 @@ export function UserMenu({ user }: UserMenuProps) {
     <div className="flex items-center justify-between">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="pl-0">
+          <Button variant="ghost" className="p-0">
             {user?.user_metadata.avatar_url ? (
               <Image
                 height={60}
@@ -89,6 +91,11 @@ export function UserMenu({ user }: UserMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {path === '/profile' &&
+        <Button variant={'default'} onClick={() => router.push('/')} className='flex flex-row items-center ml-2'>
+          <HomeIcon className='w-4 h-4 mr-2' /> Home
+        </Button>
+      }
     </div>
   )
 }
