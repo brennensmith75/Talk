@@ -6,6 +6,7 @@ export const runtime = 'edge'
 
 export default async function IndexPage() {
 
+  console.log('IndexPage')
   const session = await auth()
   const userId = session?.user?.id
   const id = nanoid()
