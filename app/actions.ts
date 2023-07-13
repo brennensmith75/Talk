@@ -81,6 +81,7 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
 
 export async function clearChats() {
   try {
+    console.log('clearChats')
     const session = await auth()
     await supabase
       .from('chats')

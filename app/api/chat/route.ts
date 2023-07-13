@@ -37,6 +37,8 @@ export async function POST(req: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies })
   const json = await req.json()
   const { messages, previewToken, model } = json
+
+  console.log('chat/route POST', json)
   const userId = (await auth())?.user.id
 
   if (!userId) {

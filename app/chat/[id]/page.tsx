@@ -17,6 +17,7 @@ export interface ChatPageProps {
 export async function generateMetadata({
   params
 }: ChatPageProps): Promise<Metadata> {
+  console.log('generateMetadata')
   const session = await auth()
 
   if (!session?.user) {
@@ -30,6 +31,7 @@ export async function generateMetadata({
 }
 
 export default async function ChatPage({ params }: ChatPageProps) {
+  console.log('ChatPage')
   const session = await auth()
 
   if (!session?.user) {
