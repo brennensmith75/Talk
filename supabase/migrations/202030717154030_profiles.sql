@@ -24,9 +24,8 @@ create policy "Allow full access to own user data" on public.profiles as permiss
 -- Function to create a new profile record whenever a new auth.user record is created
 -- Copies the user's full name and username from the raw_user_meta_data jsob field
 -- Initializes the prompts field to an empty object with a "default" key
-create function
-public.create_profile_for_new_user()
-returns profile_trigger AS
+create or replace function public.create_profile_for_new_user()
+returns trigger as
 $$
 begin
     insert into public.profile (id, display_name, username, prompts)
@@ -41,12 +40,10 @@ end;
 $$ language plpgsql security definer;
 
 -- Trigger to trigger the function above
-create profile_trigger
-create_profile_on_signup
+create trigger trigger_create_profile
 after insert on auth.users
 for each row
-execute procedure
-public.create_profile_for_new_user();
+execute function public.create_profile_for_new_user();
 
 -- Contents of auth.users.raw_user_meta_data
 -- {"iss":"https://api.github.com","sub":"882952","name":"Sean Oliver","email":"helloseanoliver@gmail.com","full_name":"Sean Oliver","user_name":"seanoliver","avatar_url":"https://avatars.githubusercontent.com/u/882952?v=4","provider_id":"882952","email_verified":true,"preferred_username":"seanoliver"}
