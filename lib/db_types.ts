@@ -59,6 +59,34 @@ export interface Database {
           }
         ]
       }
+      profiles: {
+        Row: {
+          display_name: string | null
+          id: string
+          prompts: Json | null
+          username: string | null
+        }
+        Insert: {
+          display_name?: string | null
+          id: string
+          prompts?: Json | null
+          username?: string | null
+        }
+        Update: {
+          display_name?: string | null
+          id?: string
+          prompts?: Json | null
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
