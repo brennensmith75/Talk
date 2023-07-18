@@ -10,8 +10,6 @@
 
 create table "public"."profiles" (
     id uuid primary key references auth.users on delete cascade,
-    display_name text,
-    username text,
     prompts jsonb DEFAULT '{}' :: jsonb
 );
 
@@ -31,8 +29,6 @@ begin
     insert into public.profile (id, display_name, username, prompts)
     values (
         new.id,
-        new.raw_user_meta_data ->> 'full_name',
-        new.raw_user_meta_data ->> 'user_name',
         '{"default": ""}'
     );
     return new;
