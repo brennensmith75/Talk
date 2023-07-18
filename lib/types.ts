@@ -1,4 +1,6 @@
 import { type Message } from 'ai'
+import { Session } from '@supabase/auth-helpers-nextjs'
+
 
 export type SmolTalkMessage = Message & {
   messageAuthor_id?: string
