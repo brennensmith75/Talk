@@ -1,5 +1,4 @@
 import { type Message } from 'ai'
-import { Session } from '@supabase/auth-helpers-nextjs'
 
 
 export type SmolTalkMessage = Message & {
@@ -23,3 +22,7 @@ export type ServerActionResult<Result> = Promise<
       error: string
     }
 >
+
+export type Prompts = {
+  [key: string]: string;
+}

@@ -1,32 +1,36 @@
 'use server'
 
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+
 import { cookies } from 'next/headers'
-import { Database } from '@/lib/db_types'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { type User } from '@supabase/auth-helpers-nextjs';
+
 
 import { type Chat } from '@/lib/types'
 import { auth } from '@/auth'
 
-const supabase = createServerActionClient<Database>({ cookies })
+// // Create core Supabase client
+// const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_URL as string
+// const supabase_key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+// const supabase = createClient<Database>(supabase_url, supabase_key)
+
+// Create Auth helper client
+const supabase = createServerActionClient({ cookies })
 
 function nanoid() {
   return Math.random().toString(36).slice(2) // random id up to 11 chars
 }
 
 export async function upsertChat(chat: Chat) {
-  const { error } = await supabase
-    .from('chats')
-    .upsert(
-      {
-        id: chat.chat_id || nanoid(),
-        userId: chat.userId,
-        payload: chat
-      },
-      {
-        onConflict: 'handle',
-    })
+  const { error } = await supabase.from('chats').upsert(
+    {
+      id: chat.chat_id || nanoid(),
+      user_id: chat.userId,
+      payload: chat
+    }
+  )
   if (error) {
     console.log('upsertChat error', error)
     return {
@@ -36,7 +40,6 @@ export async function upsertChat(chat: Chat) {
     return null
   }
 }
-
 
 export async function getChats(userId?: string | null) {
   if (!userId) {
@@ -121,4 +124,84 @@ export async function shareChat(chat: Chat) {
     .throwOnError()
 
   return payload
+}
+
+export async function getPrompts( user : User) {
+  try {
+    const { data } = await supabase
+      .from('profiles')
+      .select()
+      .eq('id', user.id)
+      .maybeSingle()
+
+    const prompts = data ? data.prompts : upsertPrompts(user)
+    return prompts
+  } catch (error) {
+    console.log('get prompts error', error)
+    return {
+      error: 'Unauthorized'
+    }
+  }
+}
+
+export async function upsertPrompts(
+  user: User,
+  prompts: { [key: string]: string } = { Default: '' }
+) {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert({ id: user.id as string, prompts: prompts })
+      .eq('id', user.id)
+      .select('prompts')
+
+    console.log('upsert prompts data', data)
+    if (data) return data[0].prompts
+    return { error: 'Unauthorized' }
+
+  } catch (error) {
+    console.log('upsert prompts error', error)
+    return {
+      error: 'Unauthorized'
+    }
+  }
+}
+
+export async function updateUser({
+  updatedProfileData,
+  user
+}: {
+  updatedProfileData: { [key: string]: string },
+  user: User
+}) {
+  try {
+
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ prompts: updatedProfileData.prompts })
+      .eq('id', user.id)
+
+    if (updatedProfileData.email) {
+      await supabase
+        .from('auth.users')
+        .update({ email: updatedProfileData.email })
+        .eq('id', user.id)
+    }
+
+    if (updatedProfileData.username) {
+      await supabase
+        .from('auth.users')
+        .update({ user_name: updatedProfileData.username })
+        .eq('id', user.id)
+    }
+
+    return data
+
+  } catch (error) {
+    console.log('update user error', error)
+    return {
+      error: 'Unauthorized'
+    }
+  }
 }

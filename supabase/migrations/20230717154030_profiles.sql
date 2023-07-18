@@ -10,7 +10,7 @@
 
 create table "public"."profiles" (
     id uuid primary key references auth.users on delete cascade,
-    prompts jsonb DEFAULT '{}' :: jsonb
+    prompts jsonb DEFAULT '{"Default" : ""}' :: jsonb
 );
 
 alter table
@@ -18,6 +18,9 @@ alter table
 
 create policy "Allow full access to own user data" on public.profiles as permissive for all to authenticated using ((auth.uid() = id)) with check ((auth.uid() = id));
 
+-- Initialize a record in the profiles table for each existing user
+insert into public.profiles (id, prompts)
+select id, '{"Default": ""}' from auth.users;
 
 -- Function to create a new profile record whenever a new auth.user record is created
 -- Copies the user's full name and username from the raw_user_meta_data jsob field
@@ -26,10 +29,10 @@ create or replace function public.create_profile_for_new_user()
 returns trigger as
 $$
 begin
-    insert into public.profile (id, display_name, username, prompts)
+    insert into public.profile (id, prompts)
     values (
         new.id,
-        '{"default": ""}'
+        '{"Default": ""}'
     );
     return new;
 end;
@@ -40,6 +43,3 @@ create trigger trigger_create_profile
 after insert on auth.users
 for each row
 execute function public.create_profile_for_new_user();
-
--- Contents of auth.users.raw_user_meta_data
--- {"iss":"https://api.github.com","sub":"882952","name":"Sean Oliver","email":"helloseanoliver@gmail.com","full_name":"Sean Oliver","user_name":"seanoliver","avatar_url":"https://avatars.githubusercontent.com/u/882952?v=4","provider_id":"882952","email_verified":true,"preferred_username":"seanoliver"}
