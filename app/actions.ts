@@ -131,7 +131,9 @@ export async function getPrompts(user: User) {
       .eq('user_id', user.id)
 
     const prompts =
-      data.length > 0 ? data : [{ id: null, prompt_name: '', prompt_body: '' }]
+      data && data.length > 0
+        ? data
+        : [{ id: null, prompt_name: '', prompt_body: '' }]
 
     return prompts
   } catch (error) {
@@ -164,7 +166,7 @@ export async function upsertPrompts(
   }
 }
 
-// TODO: Temporary solution to properly upsert prompts based on whether they have an existing id
+// TODO: Refactor this
 type PromptGroups = {
   [index: string]: {
     id?: string
