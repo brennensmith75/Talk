@@ -61,7 +61,6 @@ export default function ProfileForm({
   })
 
   async function onSubmit(values: z.infer<typeof finalFormSchema>) {
-    console.log('🔴🔴🔴 SUBMIT', values)
     try {
       const result = await updateUser({ values, user })
       console.log('Update User Result:', result)

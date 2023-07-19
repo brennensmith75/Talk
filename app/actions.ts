@@ -130,11 +130,9 @@ export async function getPrompts(user: User) {
       .select('id, prompt_name, prompt_body')
       .eq('user_id', user.id)
 
-    console.log('🔴 getPrompts data', data)
     const prompts =
       data.length > 0 ? data : [{ id: null, prompt_name: '', prompt_body: '' }]
 
-    console.log('🔴 getPrompts prompts', prompts)
     return prompts
   } catch (error) {
     console.log('get prompts error', error)
@@ -197,8 +195,6 @@ export async function updateUser({
       return result
     }, {} as { [key: string]: string })
 
-    console.log('🔴 Prompt data:', promptData)
-
     let promptGroups: PromptGroups = {}
 
     for (let key in promptData) {
@@ -211,12 +207,10 @@ export async function updateUser({
 
       promptGroups[index][field] = promptData[key]
     }
-    console.log('🔴 Prompt groups:', promptGroups)
+
     for (let index in promptGroups) {
       let prompt = promptGroups[index]
-      console.log('🔵 Updating prompt:', prompt)
       if (prompt.id) {
-        console.log('🟢 Updating prompt:', prompt)
         const { data, error } = await supabase
           .from('prompts')
           .update({
@@ -231,7 +225,6 @@ export async function updateUser({
           console.log('Updated prompt:', data)
         }
       } else {
-        console.log('🟠 Inserting prompt:', prompt)
         const { data, error } = await supabase.from('prompts').insert({
           user_id: user.id,
           prompt_name: prompt.name,
@@ -259,9 +252,6 @@ export async function updateUser({
         .update({ user_name: userData.username })
         .eq('id', user.id)
     }
-
-    console.log('🔵 update user data', userData)
-    console.log('🔵 update prompt data', promptData)
 
     return {
       data: {

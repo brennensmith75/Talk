@@ -5,8 +5,6 @@ import { redirect } from 'next/navigation'
 import { Prompts } from '@/lib/types';
 
 export default async function ProfilePage() {
-  console.log('🔴 render ProfilePage')
-
   const session = await auth()
   const user = session?.user
   if (!user) {
@@ -14,9 +12,7 @@ export default async function ProfilePage() {
   }
 
   const prompts = await getPrompts(user) as Prompts
-  console.log('🔴 prompts', prompts)
-
-
+  
   return (
     <div className="flex-1 space-y-6">
       <div className="px-4 py-6 border-b bg-background md:px-6 md:py-8">
