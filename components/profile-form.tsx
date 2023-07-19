@@ -43,7 +43,7 @@ export default function ProfileForm({
   prompts.forEach((prompt, index) => {
     formSchema = {
       ...formSchema,
-      [`prompt_id_${index}`]: z.string().nullable().optional(),
+      [`prompt_id_${index}`]: z.number().nullable().optional(),
       [`prompt_name_${index}`]: z.string().optional(),
       [`prompt_body_${index}`]: z.string().optional()
     }
