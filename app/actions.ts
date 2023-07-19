@@ -161,13 +161,13 @@ export async function updateUser({
   user: User
 }) {
   try {
-    // userData is the data that will be updated in the auth.users table
+    // userData will update auth.users table
     const userData = {
       username: values.username,
       email: values.email
     }
 
-    // promptData is the data that will be updated in the public.prompts table
+    // promptData will update public.prompts table
     const promptData = Object.keys(values).reduce((result, key) => {
       if (key.startsWith('prompt_')) {
         result[key] = values[key]
@@ -175,6 +175,8 @@ export async function updateUser({
       return result
     }, {} as { [key: string]: string })
 
+
+    // Un-flatten the prompt data
     let promptGroups: PromptGroups = {}
 
     for (let key in promptData) {
@@ -187,7 +189,7 @@ export async function updateUser({
 
       promptGroups[index][field] = promptData[key]
     }
-
+    console.log('promptGroups', promptGroups)
     for (let index in promptGroups) {
       let prompt = promptGroups[index]
       if (prompt.id) {
