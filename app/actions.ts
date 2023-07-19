@@ -5,8 +5,7 @@ import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { type User } from '@supabase/auth-helpers-nextjs';
-
+import { type User } from '@supabase/auth-helpers-nextjs'
 
 import { type Chat } from '@/lib/types'
 import { auth } from '@/auth'
@@ -24,13 +23,11 @@ function nanoid() {
 }
 
 export async function upsertChat(chat: Chat) {
-  const { error } = await supabase.from('chats').upsert(
-    {
-      id: chat.chat_id || nanoid(),
-      user_id: chat.userId,
-      payload: chat
-    }
-  )
+  const { error } = await supabase.from('chats').upsert({
+    id: chat.chat_id || nanoid(),
+    user_id: chat.userId,
+    payload: chat
+  })
   if (error) {
     console.log('upsertChat error', error)
     return {
@@ -126,15 +123,18 @@ export async function shareChat(chat: Chat) {
   return payload
 }
 
-export async function getPrompts( user : User) {
+export async function getPrompts(user: User) {
   try {
-    const { data } = await supabase
-      .from('profiles')
-      .select()
-      .eq('id', user.id)
-      .maybeSingle()
+    const { data, error } = await supabase
+      .from('prompts')
+      .select('id, prompt_name, prompt_body')
+      .eq('user_id', user.id)
 
-    const prompts = data ? data.prompts : upsertPrompts(user)
+    console.log('🔴 getPrompts data', data)
+    const prompts =
+      data.length > 0 ? data : [{ id: null, prompt_name: '', prompt_body: '' }]
+
+    console.log('🔴 getPrompts prompts', prompts)
     return prompts
   } catch (error) {
     console.log('get prompts error', error)
@@ -158,7 +158,6 @@ export async function upsertPrompts(
     console.log('upsert prompts data', data)
     if (data) return data[0].prompts
     return { error: 'Unauthorized' }
-
   } catch (error) {
     console.log('upsert prompts error', error)
     return {
@@ -167,37 +166,112 @@ export async function upsertPrompts(
   }
 }
 
+// TODO: Temporary solution to properly upsert prompts based on whether they have an existing id
+type PromptGroups = {
+  [index: string]: {
+    id?: string
+    name?: string
+    body?: string
+  }
+}
+
 export async function updateUser({
-  updatedProfileData,
+  values,
   user
 }: {
-  updatedProfileData: { [key: string]: string },
+  values: { [x: string]: any }
   user: User
 }) {
   try {
+    // userData is the data that will be updated in the auth.users table
+    const userData = {
+      username: values.username,
+      email: values.email
+    }
 
+    // promptData is the data that will be updated in the public.prompts table
+    const promptData = Object.keys(values).reduce((result, key) => {
+      if (key.startsWith('prompt_')) {
+        result[key] = values[key]
+      }
+      return result
+    }, {} as { [key: string]: string })
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .update({ prompts: updatedProfileData.prompts })
-      .eq('id', user.id)
+    console.log('🔴 Prompt data:', promptData)
 
-    if (updatedProfileData.email) {
+    let promptGroups: PromptGroups = {}
+
+    for (let key in promptData) {
+      const [tempField, index] = key.split('_').slice(1)
+      const field: 'id' | 'name' | 'body' = tempField as 'id' | 'name' | 'body'
+
+      if (!promptGroups[index]) {
+        promptGroups[index] = {}
+      }
+
+      promptGroups[index][field] = promptData[key]
+    }
+    console.log('🔴 Prompt groups:', promptGroups)
+    for (let index in promptGroups) {
+      let prompt = promptGroups[index]
+      console.log('🔵 Updating prompt:', prompt)
+      if (prompt.id) {
+        console.log('🟢 Updating prompt:', prompt)
+        const { data, error } = await supabase
+          .from('prompts')
+          .update({
+            prompt_name: prompt.name,
+            prompt_body: prompt.body
+          })
+          .eq('id', prompt.id)
+
+        if (error) {
+          console.log('Error updating prompt:', error)
+        } else {
+          console.log('Updated prompt:', data)
+        }
+      } else {
+        console.log('🟠 Inserting prompt:', prompt)
+        const { data, error } = await supabase.from('prompts').insert({
+          user_id: user.id,
+          prompt_name: prompt.name,
+          prompt_body: prompt.body
+        })
+
+        if (error) {
+          console.log('Error inserting prompt:', error)
+        } else {
+          console.log('Inserted prompt:', data)
+        }
+      }
+    }
+
+    if (userData.email) {
       await supabase
         .from('auth.users')
-        .update({ email: updatedProfileData.email })
+        .update({ email: userData.email })
         .eq('id', user.id)
     }
 
-    if (updatedProfileData.username) {
+    if (userData.username) {
       await supabase
         .from('auth.users')
-        .update({ user_name: updatedProfileData.username })
+        .update({ user_name: userData.username })
         .eq('id', user.id)
     }
 
-    return data
+    console.log('🔵 update user data', userData)
+    console.log('🔵 update prompt data', promptData)
 
+    return {
+      data: {
+        user: {
+          ...user,
+          ...userData
+        },
+        prompts: promptData
+      }
+    }
   } catch (error) {
     console.log('update user error', error)
     return {
