@@ -140,7 +140,6 @@ export async function getPrompts(user: User) {
   }
 }
 
-// TODO: Refactor this
 type PromptGroups = {
   [index: string]: {
     id?: string
