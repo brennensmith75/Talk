@@ -1,15 +1,9 @@
 'use client'
 
-// Supabase
-import { createClientComponentClient, type Session } from '@supabase/auth-helpers-nextjs'
-
-import { updateUser } from '@/app/actions'
-
-// Zod
+import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ZodTypeAny, z } from 'zod'
+import { useForm } from 'react-hook-form'
 
-// UI
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -21,117 +15,68 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useForm } from 'react-hook-form'
+import React from 'react'
 import { Textarea } from './ui/textarea'
-import { useEffect, useState } from 'react';
+import { updateUser } from '@/app/actions'
 
-/**
- * Create form schema.
- */
-const createFormSchema = (prompts: Record<string, string>) => {
-  let dynamicSchema: Record<string, ZodTypeAny> = {
-    username: z
-      .string()
-      .min(2, {
-        message: 'Username must be at least 2 characters long'
-      })
-      .max(50),
-    email: z.string().email({
-      message: 'Please enter a valid email address'
-    })
-  }
-
-  for (let prompt in prompts) {
-    dynamicSchema[prompt] = z
-      .string()
-      .max(1000, {
-        message: 'System prompt must be less than 1000 characters long'
-      })
-  }
-
-  return z.object(dynamicSchema)
-}
-
-interface CreateDefaultFormValuesProps {
-  user: Session['user']
-  prompts: Record<string, string>
-}
-
-const createDefaultFormValues = ({
+export default function ProfileForm({
   user,
   prompts
-}: CreateDefaultFormValuesProps) => {
-  let defaultValues: Record<string, any> = {
+}: {
+  user: any
+  prompts: any[]
+}) {
+
+  let formSchema: z.ZodRawShape = {
+    username: z
+      .string()
+      .min(2, { message: 'Username cannot have fewer than 2 characters' })
+      .max(50, { message: 'Username cannot have more than 50 characters' }),
+    email: z.string().email({ message: 'Please enter a valid email address' })
+  }
+
+  const defaultValues: any = {
     username: user.user_metadata.user_name,
     email: user.user_metadata.email
   }
 
-  for (let prompt in prompts) defaultValues[prompt] = prompts[prompt]
-
-  return defaultValues
-}
-
-/**
- * Create a form for the user to edit their profile and system prompts.
- */
-export function ProfileForm({
-  user
-}: {
-  user: Session['user']
-}) {
-  console.log('🔴 render ProfileForm')
-  console.log('🔴 another one')
-  const [prompts, setPrompts] = useState<Record<string, string>>({})
-  console.log('🔴 prompts state')
-  const [formSchema, setFormSchema] = useState<z.ZodObject<any, any, any>>(z.object({}))
-  const [defaultValues, setDefaultValues] = useState({})
-  const [loading, setLoading] = useState(true)
-  console.log('🔴 after useState')
-  const form = useForm<z.infer<typeof formSchema>>()
-
-  useEffect(() => {
-    console.log('🔴 enter useeffect')
-    const getPrompts = async () => {
-      const supabase = createClientComponentClient()
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('prompts')
-        .eq('user_id', user.id)
-        .single()
-      console.log('🔴 after query')
-      if (error) {
-        console.log(error)
-      } else {
-        const retrievedPrompts = data?.prompts
-        setPrompts(retrievedPrompts)
-        setFormSchema(createFormSchema(retrievedPrompts))
-        setDefaultValues(createDefaultFormValues({ user, prompts: retrievedPrompts }))
-
-        // Reset form with the new formSchema and defaultValues
-        form.reset(createDefaultFormValues({ user, prompts: retrievedPrompts }), {
-          resolver: zodResolver(createFormSchema(retrievedPrompts)),
-          errors: {}, // Reset form errors
-        })
-
-        setLoading(false)
-      }
+  prompts.forEach((prompt, index) => {
+    formSchema = {
+      ...formSchema,
+      [`prompt_id_${index}`]: z.string().nullable().optional(),
+      [`prompt_name_${index}`]: z.string().optional(),
+      [`prompt_body_${index}`]: z.string().optional()
     }
-    console.log('🔴 call useeffect')
-    getPrompts()
-  }, [form])
+    defaultValues[`prompt_id_${index}`] = prompt.id
+    defaultValues[`prompt_name_${index}`] = prompt.prompt_name
+    defaultValues[`prompt_body_${index}`] = prompt.prompt_body
+  })
 
-  // if (loading) {
-  //   return <div>Loading...</div>
-  // }
+  const finalFormSchema = z.object(formSchema)
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    let updatedProfileData = { ...values }
-    await updateUser({ updatedProfileData, user })
+  const form = useForm<z.infer<typeof finalFormSchema>>({
+    resolver: zodResolver(finalFormSchema),
+    mode: 'onChange',
+    defaultValues
+  })
+
+  async function onSubmit(values: z.infer<typeof finalFormSchema>) {
+    console.log('🔴🔴🔴 SUBMIT', values)
+    try {
+      const result = await updateUser({ values, user })
+      console.log('Update User Result:', result)
+    } catch (error) {
+      console.error('Error Updating User:', error)
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        method="post"
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -141,6 +86,9 @@ export function ProfileForm({
               <FormControl>
                 <Input placeholder="smol-developer" {...field} />
               </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -158,41 +106,48 @@ export function ProfileForm({
             </FormItem>
           )}
         />
-
-        {/* Dynamically generate form fields for prompts */}
-        {Object.keys(prompts).map(prompt => {
-
-          return (
+        {prompts.map((prompt, index) => (
+          <React.Fragment key={index}>
             <FormField
-              key={prompt}
               control={form.control}
-              name={prompt}
+              name={`prompt_name_${index}`}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{prompt}</FormLabel>
+                <FormItem className="mb-4">
+                  <FormLabel>Prompt Name</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="I love to learn about technology trends and enjoy humor in responses."
-                      {...field}
-                    />
+                    <Input placeholder="Tech Guru" {...field} />
                   </FormControl>
                   <FormDescription>
-                    Tailor your AI experience here. Each time you interact with
-                    the AI, it refers to this text to personalize its responses.
-                    Please keep your description focused and direct. For
-                    instance: &quot;I have a deep interest in history and prefer
-                    analogies to explain complex concepts.&quot;
+                    Create a brief, descriptive title for your profile.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          )
-        })}
-
-        <Button type="submit" className="dark:bg-secondary dark:text-white">
-          Submit
-        </Button>
+            <FormField
+              control={form.control}
+              name={`prompt_body_${index}`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prompt Body</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="I'm a tech enthusiast who loves discussing the latest gadgets and AI trends."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Identify your unique perspective or a perspective you&apos;d
+                    like the AI to adopt. This helps the AI to tailor its
+                    responses to your interests.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </React.Fragment>
+        ))}
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   )

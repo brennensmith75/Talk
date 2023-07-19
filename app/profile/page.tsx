@@ -1,6 +1,5 @@
 import { auth } from '@/auth'
-import { ProfileForm } from '@/components/profile-form'
-import NewProfileForm from '@/components/new-profile-form'
+import ProfileForm from '@/components/profile-form'
 import { getPrompts } from '../actions'
 import { redirect } from 'next/navigation'
 import { Prompts } from '@/lib/types';
@@ -36,7 +35,7 @@ export default async function ProfilePage() {
         <div className="max-w-2xl mx-auto rounded-lg bg-background border p-6">
           <div className="space-y-6">
             <div className="space-y-6">
-              <NewProfileForm user={user} prompts={prompts} />
+              <ProfileForm user={user} prompts={prompts} />
             </div>
           </div>
         </div>
