@@ -59,23 +59,29 @@ export interface Database {
           }
         ]
       }
-      profiles: {
+      prompts: {
         Row: {
-          id: string
-          prompts: Json | null
+          id: number
+          prompt_body: string
+          prompt_name: string
+          user_id: string
         }
         Insert: {
-          id: string
-          prompts?: Json | null
+          id?: number
+          prompt_body?: string
+          prompt_name?: string
+          user_id: string
         }
         Update: {
-          id?: string
-          prompts?: Json | null
+          id?: number
+          prompt_body?: string
+          prompt_name?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
+            foreignKeyName: "prompts_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
