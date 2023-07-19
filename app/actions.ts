@@ -3,6 +3,7 @@
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 
 import { cookies } from 'next/headers'
+import { Database } from '@/lib/db_types';
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { type User } from '@supabase/auth-helpers-nextjs'
@@ -10,13 +11,8 @@ import { type User } from '@supabase/auth-helpers-nextjs'
 import { type Chat } from '@/lib/types'
 import { auth } from '@/auth'
 
-// // Create core Supabase client
-// const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_URL as string
-// const supabase_key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
-// const supabase = createClient<Database>(supabase_url, supabase_key)
-
 // Create Auth helper client
-const supabase = createServerActionClient({ cookies })
+const supabase = createServerActionClient<Database>({ cookies })
 
 function nanoid() {
   return Math.random().toString(36).slice(2) // random id up to 11 chars
