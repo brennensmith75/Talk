@@ -24,9 +24,9 @@ major_version = 15
 [studio]
 # Port to use for Supabase Studio.
 port = 54323
+
 # Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
 # are monitored, and you can view the emails that would have been sent from the web interface.
-
 [inbucket]
 # Port to use for the email testing server web interface.
 port = 54324
@@ -57,10 +57,10 @@ enable_signup = true
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 enable_confirmations = false
+
 # Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin`, `notion`, `twitch`,
 # `twitter`, `slack`, `spotify`, `workos`, `zoom`.
-
 [auth.external.github]
 enabled = true
 client_id = "env(AUTH_GITHUB_ID)"
