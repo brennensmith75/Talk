@@ -23,8 +23,3 @@ export type ServerActionResult<Result> = Promise<
     }
 >
 
-export type Prompts = {
-  prompt_name: string
-  prompt_body: string
-}[]
-

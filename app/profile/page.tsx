@@ -2,7 +2,11 @@ import { auth } from '@/auth'
 import ProfileForm from '@/components/profile-form'
 import { getPrompts } from '../actions'
 import { redirect } from 'next/navigation'
-import { Prompts } from '@/lib/types';
+
+type Prompts = {
+  prompt_name: string
+  prompt_body: string
+}[]
 
 export default async function ProfilePage() {
   const session = await auth()
@@ -12,7 +16,7 @@ export default async function ProfilePage() {
   }
 
   const prompts = await getPrompts(user) as Prompts
-  
+
   return (
     <div className="flex-1 space-y-6">
       <div className="px-4 py-6 border-b bg-background md:px-6 md:py-8">
