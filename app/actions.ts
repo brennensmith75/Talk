@@ -144,28 +144,6 @@ export async function getPrompts(user: User) {
   }
 }
 
-export async function upsertPrompts(
-  user: User,
-  prompts: { [key: string]: string } = { Default: '' }
-) {
-  try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .upsert({ id: user.id as string, prompts: prompts })
-      .eq('id', user.id)
-      .select('prompts')
-
-    console.log('upsert prompts data', data)
-    if (data) return data[0].prompts
-    return { error: 'Unauthorized' }
-  } catch (error) {
-    console.log('upsert prompts error', error)
-    return {
-      error: 'Unauthorized'
-    }
-  }
-}
-
 // TODO: Refactor this
 type PromptGroups = {
   [index: string]: {
