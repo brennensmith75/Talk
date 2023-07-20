@@ -68,7 +68,12 @@ export function UserMenu({ user }: UserMenuProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent sideOffset={8} align="start" className="w-[180px]">
-          <DropdownMenuItem onClick={() => router.push('/profile')} className="flex-col items-start">
+          <DropdownMenuItem onClick={() => router.push('/profile')} className="flex-col items-start cursor: pointer">
+	          <div className="text-xs font-medium">
+	            Profile
+	          </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex-col items-start cursor: pointer">
             <div className="text-xs font-medium">
               {user?.user_metadata.name}
             </div>
