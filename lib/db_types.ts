@@ -59,6 +59,34 @@ export interface Database {
           }
         ]
       }
+      prompts: {
+        Row: {
+          id: number
+          prompt_body: string
+          prompt_name: string
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          prompt_body?: string
+          prompt_name?: string
+          user_id: string
+        }
+        Update: {
+          id?: number
+          prompt_body?: string
+          prompt_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompts_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

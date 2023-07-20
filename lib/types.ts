@@ -1,5 +1,6 @@
 import { type Message } from 'ai'
 
+
 export type SmolTalkMessage = Message & {
   messageAuthor_id?: string
 }
@@ -21,3 +22,4 @@ export type ServerActionResult<Result> = Promise<
       error: string
     }
 >
+
