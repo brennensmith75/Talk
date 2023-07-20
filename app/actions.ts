@@ -184,7 +184,7 @@ export async function updateUser({
 
       promptGroups[index][field] = promptData[key]
     }
-    console.log('promptGroups', promptGroups)
+    // console.log('promptGroups', promptGroups)
     for (let index in promptGroups) {
       let prompt = promptGroups[index]
       if (prompt.id) {
