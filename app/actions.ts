@@ -127,7 +127,7 @@ export async function getPrompts(user: User) {
       .select('id, prompt_name, prompt_body')
       .eq('user_id', user.id)
 
-    const prompts =
+    const prompts: Prompt[] =
       data && data.length > 0
         ? data
         : [{ id: null, prompt_name: '', prompt_body: '' }]
@@ -141,7 +141,13 @@ export async function getPrompts(user: User) {
   }
 }
 
-type PromptGroups = {
+export type Prompt = {
+  id: number | null;
+  prompt_name: string;
+  prompt_body: string;
+}
+
+export type PromptGroups = {
   [index: string]: {
     id?: string
     name?: string

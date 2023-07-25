@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import React from 'react'
 import { Textarea } from './ui/textarea'
 import { updateUser } from '@/app/actions'
+import { stringToColor, invertColorForText } from '@/lib/utils'
 
 export default function ProfileForm({
   user,
@@ -26,7 +27,6 @@ export default function ProfileForm({
   user: any
   prompts: any[]
 }) {
-
   let formSchema: z.ZodRawShape = {
     username: z
       .string()
@@ -59,6 +59,7 @@ export default function ProfileForm({
     mode: 'onChange',
     defaultValues
   })
+  const { isDirty, isValid } = form.formState;
 
   async function onSubmit(values: z.infer<typeof finalFormSchema>) {
     try {
@@ -111,16 +112,31 @@ export default function ProfileForm({
               control={form.control}
               name={`prompt_name_${index}`}
               render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Prompt Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Tech Guru" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Create a brief, descriptive title for your profile.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+                <div className="flex">
+                  <FormItem className="flex-1 mb-4">
+                    <FormLabel>Prompt Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Tech Guru" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Create a brief, descriptive title for your profile.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                  <FormItem className="ml-4">
+                    <FormLabel>Prompt Color</FormLabel>
+                    <FormDescription
+                      style={{
+                        backgroundColor: stringToColor(field.value),
+                        color: invertColorForText(stringToColor(field.value)),
+                        textAlign: 'center',
+                        margin: '1rem'
+                      }}
+                    >
+                      {stringToColor(field.value)}
+                    </FormDescription>
+                  </FormItem>
+                </div>
               )}
             />
             <FormField
@@ -146,7 +162,7 @@ export default function ProfileForm({
             />
           </React.Fragment>
         ))}
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={!isDirty || !isValid}>Submit</Button>
       </form>
     </Form>
   )

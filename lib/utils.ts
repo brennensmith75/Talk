@@ -41,3 +41,38 @@ export function formatDate(input: string | number | Date): string {
     year: 'numeric'
   })
 }
+
+
+
+// thanks chatgpt
+export function stringToColor(str: string) {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    // Multiply by a prime number and add ASCII value of current character
+    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+  }
+
+  let color = '#'
+  for (let i = 0; i < 3; i++) {
+    // Bitwise AND operation with 'hash', shifted by (i * 8) bits
+    const value = (hash >> (i * 8)) & 0xff
+    // Convert to hexadecimal and append to 'color' string
+    color += ('00' + value.toString(16)).substr(-2)
+  }
+
+  return color
+}
+
+// thanks claude
+export function invertColorForText(bgColor: string) {
+  // Convert hex to RGB
+  let r = parseInt(bgColor.substring(1, 3), 16)
+  let g = parseInt(bgColor.substring(3, 5), 16)
+  let b = parseInt(bgColor.substring(5, 7), 16)
+
+  // Calculate luminance
+  let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+  // Return black or white color based on luminance
+  return luminance > 128 ? '#000' : '#fff'
+}

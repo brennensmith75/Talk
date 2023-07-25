@@ -68,12 +68,12 @@ export function UserMenu({ user }: UserMenuProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent sideOffset={8} align="start" className="w-[180px]">
-          <DropdownMenuItem onClick={() => router.push('/profile')} className="flex-col items-start cursor: pointer">
+          <DropdownMenuItem onClick={() => router.push('/profile')} className="flex-col items-start cursor-pointer">
 	          <div className="text-xs font-medium">
 	            Profile
 	          </div>
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex-col items-start cursor: pointer">
+          <DropdownMenuItem className="flex-col items-start cursor-pointer">
             <div className="text-xs font-medium">
               {user?.user_metadata.name}
             </div>
@@ -91,13 +91,13 @@ export function UserMenu({ user }: UserMenuProps) {
               <IconExternalLink className="w-3 h-3 ml-auto" />
             </a>
           </DropdownMenuItem> */}
-          <DropdownMenuItem onClick={signOut} className="text-xs">
+          <DropdownMenuItem onClick={signOut} className="text-xs text-red-300 cursor-pointer hover:bg-red-700">
             Log Out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {path === '/profile' &&
-        <Button variant={'default'} onClick={() => router.push('/')} className='flex flex-row items-center ml-2'>
+        <Button variant={'default'} onClick={() => router.push('/')} className='flex flex-row items-center ml-4'>
           <HomeIcon className='w-4 h-4 mr-2' /> Home
         </Button>
       }

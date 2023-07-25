@@ -27,6 +27,7 @@ export function LoginButton({
       variant="outline"
       onClick={async () => {
         setIsLoading(true)
+        console.log(`location.origin`, location.origin)
         await supabase.auth.signInWithOAuth({
           provider: 'github',
           options: { redirectTo: `${location.origin}/api/auth/callback` }
