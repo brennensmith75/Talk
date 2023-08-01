@@ -74,16 +74,22 @@ export function ChatPanel({
                 content: value,
                 role: 'user'
               })
-              id = id ?? Math.random().toString(36).slice(2) // random id up to 11 chars
-              await upsertChat({
-                chat_id: id,
-                title: 'TODO: make title: '+ id,
-                userId: userId || 'unknown-user-id', // TODO: try to get rid of unknown user id, higher up 
-                messages,
-                createdAt: new Date(),
-                path: "todo",
-                sharePath: "todo"
-              })
+              // FIXME: FYI this was breaking a couple of things with the chat history:
+              // - Overwriting the path and sharePath with invalid strings
+              // - Not setting `id`, but instead assigning a new id to `chat_id` which kept the items from appearing in the sidebar
+              // - For some reason doing this is also emptied the `messages` array which otherwise includes message objects
+              // All of this is being handled by the `append` function which is a helper we get from the next `ai` package
+              //
+              // id = id ?? Math.random().toString(36).slice(2) // random id up to 11 chars
+              // await upsertChat({
+              //   chat_id: id,
+              //   title: 'TODO: make title: '+ id,
+              //   userId: userId || 'unknown-user-id', // TODO: try to get rid of unknown user id, higher up
+              //   messages,
+              //   createdAt: new Date(),
+              //   path: "todo",
+              //   sharePath: "todo"
+              // })
             }}
             input={input}
             setInput={setInput}

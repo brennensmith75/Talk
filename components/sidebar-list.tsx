@@ -8,6 +8,7 @@ export interface SidebarListProps {
 
 export async function SidebarList({ userId }: SidebarListProps) {
   const chats = await getChats(userId)
+  console.log('🔴 chats', chats)
 
   return (
     <div className="flex-1 overflow-auto">
@@ -16,7 +17,7 @@ export async function SidebarList({ userId }: SidebarListProps) {
           {chats.map(
             chat =>
               chat && (
-                <SidebarItem key={chat?.id} chat={chat}>
+                <SidebarItem key={chat.chat_id} chat={chat}>
                   <SidebarActions
                     chat={chat}
                     removeChat={removeChat}
