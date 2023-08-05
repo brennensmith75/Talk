@@ -22,7 +22,7 @@ export function EmojiPicker({
   React.useEffect(() => {
     onChange(selectedEmoji)
     setIsOpen(false)
-  }, [selectedEmoji])
+  }, [selectedEmoji, onChange])
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>

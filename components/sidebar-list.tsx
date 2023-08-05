@@ -15,9 +15,10 @@ export async function SidebarList({ userId }: SidebarListProps) {
       {chats?.length ? (
         <div className="space-y-2 px-2">
           {chats.map(
-            chat =>
+            (chat, i) =>
               chat && (
-                <SidebarItem key={chat.chat_id} chat={chat}>
+                // https://github.com/vercel/next.js/issues/52415 Error: Cannot access .prototype on the server. You cannot dot into a client module from a server component. You can only pass the imported name through.
+                <SidebarItem key={i} chat={chat}>
                   <SidebarActions
                     chat={chat}
                     removeChat={removeChat}

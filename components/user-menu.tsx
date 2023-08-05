@@ -56,15 +56,10 @@ export function UserMenu({ user }: UserMenuProps) {
               />
             ) : (
               <div className="flex h-7 w-7 shrink-0 select-none items-center justify-center rounded-full bg-muted/50 text-xs font-medium uppercase text-muted-foreground">
-                {user?.user_metadata.name
-                  ? getUserInitials(user?.user_metadata.name)
-                  : null}
+                {getUserInitials(user?.user_metadata.name ?? user?.email)}
               </div>
             )}
-            {/* <span className="ml-2">{user?.user_metadata.name}</span>
-            <span className="w-20 ml-2 overflow-hidden text-ellipsis whitespace-nowrap md:w-full ">
-              {user?.name}
-            </span> */}
+            <span className="ml-2">{user?.user_metadata.name ?? '👋🏼'}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent sideOffset={8} align="start" className="w-[180px]">

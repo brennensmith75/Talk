@@ -5,8 +5,8 @@ import { auth } from '../../auth'
 import { cookies } from 'next/headers'
 
 export default async function SettingsProfilePage() {
-  const readOnlyRequestCookies = cookies()
-  const session = await auth({ readOnlyRequestCookies })
+  const cookieStore = cookies()
+  const session = await auth({ cookieStore })
 
   const user = session?.user
   if (!user) {

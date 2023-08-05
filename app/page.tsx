@@ -7,8 +7,8 @@ export const runtime = 'edge'
 
 export default async function IndexPage() {
   console.log('IndexPage')
-  const readOnlyRequestCookies = cookies()
-  const session = await auth({ readOnlyRequestCookies })
+  const cookieStore = cookies()
+  const session = await auth({ cookieStore })
 
   const userId = session?.user?.id
   const id = nanoid()

@@ -22,6 +22,7 @@ export function LoginButton({
   const [isLoading, setIsLoading] = React.useState(false)
   // Create a Supabase client configured to use cookies
   const supabase = createClientComponentClient()
+
   return (
     <Button
       variant="outline"

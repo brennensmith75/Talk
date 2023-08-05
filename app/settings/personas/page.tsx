@@ -11,8 +11,8 @@ type Prompts = {
 }[]
 
 export default async function SettingsPersonasPage() {
-  const readOnlyRequestCookies = cookies()
-  const session = await auth({ readOnlyRequestCookies })
+  const cookieStore = cookies()
+  const session = await auth({ cookieStore })
 
   const user = session?.user
   if (!user) {

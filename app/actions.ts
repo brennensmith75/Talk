@@ -1,10 +1,6 @@
 'use server'
-
-import {
-  createServerActionClient,
-  createServerComponentClient
-} from '@supabase/auth-helpers-nextjs'
-
+import 'server-only'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { revalidatePath } from 'next/cache'
@@ -19,9 +15,9 @@ function nanoid() {
 }
 
 export async function upsertChat(chat: Chat) {
-  const readOnlyRequestCookies = cookies()
+  const cookieStore = cookies()
   const supabase = createServerActionClient<Database>({
-    cookies: () => readOnlyRequestCookies
+    cookies: () => cookieStore
   })
 
   const { error } = await supabase.from('chats').upsert({
@@ -43,17 +39,16 @@ export async function getChats(userId?: string | null) {
   if (!userId) {
     return []
   }
-
   try {
-    const readOnlyRequestCookies = cookies()
+    const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
-      cookies: () => readOnlyRequestCookies
+      cookies: () => cookieStore
     })
-
     const { data } = await supabase
       .from('chats')
       .select('payload')
       .order('payload->createdAt', { ascending: false })
+      .eq('user_id', userId)
       .throwOnError()
 
     return (data?.map(entry => entry.payload) as Chat[]) ?? []
@@ -63,11 +58,10 @@ export async function getChats(userId?: string | null) {
 }
 
 export async function getChat(id: string) {
-  const readOnlyRequestCookies = cookies()
+  const cookieStore = cookies()
   const supabase = createServerActionClient<Database>({
-    cookies: () => readOnlyRequestCookies
+    cookies: () => cookieStore
   })
-
   const { data } = await supabase
     .from('chats')
     .select('payload')
@@ -79,11 +73,10 @@ export async function getChat(id: string) {
 
 export async function removeChat({ id, path }: { id: string; path: string }) {
   try {
-    const readOnlyRequestCookies = cookies()
+    const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
-      cookies: () => readOnlyRequestCookies
+      cookies: () => cookieStore
     })
-
     await supabase.from('chats').delete().eq('id', id).throwOnError()
 
     revalidatePath('/')
@@ -97,19 +90,11 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
 
 export async function clearChats() {
   try {
-    console.log('clearChats')
-    const readOnlyRequestCookies = cookies()
-    const session = await auth({ readOnlyRequestCookies })
-
+    const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
-      cookies: () => readOnlyRequestCookies
+      cookies: () => cookieStore
     })
-
-    await supabase
-      .from('chats')
-      .delete()
-      .eq('user_id', session?.user.id)
-      .throwOnError()
+    await supabase.from('chats').delete().throwOnError()
     revalidatePath('/')
     return redirect('/')
   } catch (error) {
@@ -121,11 +106,10 @@ export async function clearChats() {
 }
 
 export async function getSharedChat(id: string) {
-  const readOnlyRequestCookies = cookies()
+  const cookieStore = cookies()
   const supabase = createServerActionClient<Database>({
-    cookies: () => readOnlyRequestCookies
+    cookies: () => cookieStore
   })
-
   const { data } = await supabase
     .from('chats')
     .select('payload')
@@ -142,11 +126,10 @@ export async function shareChat(chat: Chat) {
     sharePath: `/share/${chat.id}`
   }
 
-  const readOnlyRequestCookies = cookies()
+  const cookieStore = cookies()
   const supabase = createServerActionClient<Database>({
-    cookies: () => readOnlyRequestCookies
+    cookies: () => cookieStore
   })
-
   await supabase
     .from('chats')
     .update({ payload: payload as any })
@@ -158,9 +141,9 @@ export async function shareChat(chat: Chat) {
 
 export async function getPrompts(user: User) {
   try {
-    const readOnlyRequestCookies = cookies()
+    const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
-      cookies: () => readOnlyRequestCookies
+      cookies: () => cookieStore
     })
 
     const { data, error } = await supabase
@@ -214,9 +197,9 @@ export async function createOrUpdatePersona({
       prompt_emoji: values.prompt_emoji
     }
 
-    const readOnlyRequestCookies = cookies()
+    const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
-      cookies: () => readOnlyRequestCookies
+      cookies: () => cookieStore
     })
 
     let result
@@ -267,9 +250,9 @@ export async function createOrUpdatePersona({
 
 export async function removePersona({ id, user }: { id: string; user: User }) {
   try {
-    const readOnlyRequestCookies = cookies()
+    const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
-      cookies: () => readOnlyRequestCookies
+      cookies: () => cookieStore
     })
 
     const { data: personaResponse, error } = await supabase
@@ -309,9 +292,9 @@ export async function updateUser({
     }
 
     if (userData.email) {
-      const readOnlyRequestCookies = cookies()
+      const cookieStore = cookies()
       const supabase = createServerActionClient<Database>({
-        cookies: () => readOnlyRequestCookies
+        cookies: () => cookieStore
       })
 
       await supabase.auth.updateUser({ email: userData.email })
@@ -319,9 +302,9 @@ export async function updateUser({
 
     // TODO: update username
     // if (userData.username) {
-    //   const readOnlyRequestCookies = cookies()
+    //   const cookieStore = cookies()
     //   const supabase = createServerActionClient<Database>({
-    //     cookies: () => readOnlyRequestCookies
+    //     cookies: () => cookieStore
     //   })
 
     //   await supabase.auth.updateUser({
