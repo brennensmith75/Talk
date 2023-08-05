@@ -1,9 +1,10 @@
 'use client'
 
-import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
+import { updateUser } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -15,18 +16,9 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import React from 'react'
-import { Textarea } from './ui/textarea'
-import { updateUser } from '@/app/actions'
-import { stringToColor, invertColorForText } from '@/lib/utils'
+import { toast } from 'react-hot-toast'
 
-export default function ProfileForm({
-  user,
-  prompts
-}: {
-  user: any
-  prompts: any[]
-}) {
+export default function ProfileForm({ user }: { user: any }) {
   let formSchema: z.ZodRawShape = {
     username: z
       .string()
@@ -40,18 +32,6 @@ export default function ProfileForm({
     email: user.user_metadata.email
   }
 
-  prompts.forEach((prompt, index) => {
-    formSchema = {
-      ...formSchema,
-      [`prompt_id_${index}`]: z.number().nullable().optional(),
-      [`prompt_name_${index}`]: z.string().optional(),
-      [`prompt_body_${index}`]: z.string().optional()
-    }
-    defaultValues[`prompt_id_${index}`] = prompt.id
-    defaultValues[`prompt_name_${index}`] = prompt.prompt_name
-    defaultValues[`prompt_body_${index}`] = prompt.prompt_body
-  })
-
   const finalFormSchema = z.object(formSchema)
 
   const form = useForm<z.infer<typeof finalFormSchema>>({
@@ -59,15 +39,37 @@ export default function ProfileForm({
     mode: 'onChange',
     defaultValues
   })
-  const { isDirty, isValid } = form.formState;
+
+  const { isDirty, isValid } = form.formState
 
   async function onSubmit(values: z.infer<typeof finalFormSchema>) {
-    try {
-      const result = await updateUser({ values, user })
-      console.log('Update User Result:', result)
-    } catch (error) {
-      console.error('Error Updating User:', error)
-    }
+    toast
+      .promise(
+        updateUser({ values, user }),
+        {
+          loading: 'Saving...',
+          success: 'Profile Saved!',
+          error: 'Error Updating User.'
+        },
+        {
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+            fontSize: '14px'
+          },
+          iconTheme: {
+            primary: 'white',
+            secondary: 'black'
+          }
+        }
+      )
+      .then(result => {
+        console.log('Update User Result:', result)
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   return (
@@ -84,11 +86,14 @@ export default function ProfileForm({
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="smol-developer" {...field} />
+                <Input
+                  className="select-none bg-gray-100 dark:bg-gray-800"
+                  readOnly={true}
+                  placeholder="smol-developer"
+                  {...field}
+                />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+              <FormDescription>This is your account username.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -106,63 +111,9 @@ export default function ProfileForm({
             </FormItem>
           )}
         />
-        {prompts.map((prompt, index) => (
-          <React.Fragment key={index}>
-            <FormField
-              control={form.control}
-              name={`prompt_name_${index}`}
-              render={({ field }) => (
-                <div className="flex">
-                  <FormItem className="flex-1 mb-4">
-                    <FormLabel>Prompt Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Tech Guru" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Create a brief, descriptive title for your profile.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                  <FormItem className="ml-4">
-                    <FormLabel>Prompt Color</FormLabel>
-                    <FormDescription
-                      style={{
-                        backgroundColor: stringToColor(field.value),
-                        color: invertColorForText(stringToColor(field.value)),
-                        textAlign: 'center',
-                        margin: '1rem'
-                      }}
-                    >
-                      {stringToColor(field.value)}
-                    </FormDescription>
-                  </FormItem>
-                </div>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={`prompt_body_${index}`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Prompt Body</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="I'm a tech enthusiast who loves discussing the latest gadgets and AI trends."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Identify your unique perspective or a perspective you&apos;d
-                    like the AI to adopt. This helps the AI to tailor its
-                    responses to your interests.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </React.Fragment>
-        ))}
-        <Button type="submit" disabled={!isDirty || !isValid}>Submit</Button>
+        <Button type="submit" disabled={!isDirty || !isValid}>
+          Save
+        </Button>
       </form>
     </Form>
   )

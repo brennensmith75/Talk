@@ -4,8 +4,9 @@ import { notFound, redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { getChat } from '@/app/actions'
 import { Chat } from '@/components/chat'
+import { cookies } from 'next/headers'
 
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 export const preferredRegion = 'home'
 
 export interface ChatPageProps {
@@ -18,7 +19,8 @@ export async function generateMetadata({
   params
 }: ChatPageProps): Promise<Metadata> {
   console.log('generateMetadata')
-  const session = await auth()
+  const readOnlyRequestCookies = cookies()
+  const session = await auth({ readOnlyRequestCookies })
 
   if (!session?.user) {
     return {}
@@ -32,7 +34,8 @@ export async function generateMetadata({
 
 export default async function ChatPage({ params }: ChatPageProps) {
   console.log('ChatPage')
-  const session = await auth()
+  const readOnlyRequestCookies = cookies()
+  const session = await auth({ readOnlyRequestCookies })
 
   if (!session?.user) {
     redirect(`/sign-in?next=/chat/${params.id}`)
@@ -48,5 +51,11 @@ export default async function ChatPage({ params }: ChatPageProps) {
     notFound()
   }
 
-  return <Chat id={chat.id} userId={session?.user?.id} initialMessages={chat.messages} />
+  return (
+    <Chat
+      id={chat.id}
+      userId={session?.user?.id}
+      initialMessages={chat.messages}
+    />
+  )
 }

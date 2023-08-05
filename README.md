@@ -37,11 +37,21 @@ Copy the `.env.example` file and populate the required env vars:
 cp .env.example .env
 ```
 
+Install Docker [or Colima](https://www.swyx.io/running-docker-without-docker-desktop)
+
 [Install the Supabase CLI](https://supabase.com/docs/guides/cli) and start the local Supabase stack:
 
 ```bash
-npm install supabase --save-dev
+pnpm install supabase --save-dev
 npx supabase start
+```
+
+Run migrations
+
+```bash
+npx supabase login
+npx supabase link --project-ref <project_ref_id>
+npx supabase db reset
 ```
 
 Install the local dependencies and start dev mode:
@@ -53,11 +63,30 @@ pnpm dev
 
 Your app template should now be running on [localhost:3000](http://localhost:3000/).
 
+<<<<<<< Updated upstream
+## Migrations and generating types
+
+```bash
+npx supabase gen types typescript --project-id "<project-ref>" --schema public > lib/db_types.ts
+```
+
 ## Authors
+=======
+## Migrations
+>>>>>>> Stashed changes
 
-This library is created by [Vercel](https://vercel.com) and [Next.js](https://nextjs.org) team members, with contributions from:
+```
+$ npx supabase migration list
 
-- Jared Palmer ([@jaredpalmer](https://twitter.com/jaredpalmer)) - [Vercel](https://vercel.com)
-- Shu Ding ([@shuding\_](https://twitter.com/shuding_)) - [Vercel](https://vercel.com)
-- shadcn ([@shadcn](https://twitter.com/shadcn)) - [Contractor](https://shadcn.com)
-- Thor Schaeff ([@thorwebdev](https://twitter.com/thorwebdev)) - [Supabaseifier](https://thor.bio)
+Enter your database password: 
+Retrying... db.xxxxxxxxxxx.supabase.co 5432
+
+  
+        LOCAL      │     REMOTE     │     TIME (UTC)
+  ─────────────────┼────────────────┼──────────────────────
+    20230707053030 │ 20230707053030 │ 2023-07-07 05:30:30
+    20230717154030 │ 20230717154030 │ 2023-07-17 15:40:30
+    20230803223023 │                │ 2023-08-03 22:30:23
+
+$ npx supabase migration repair 20230803223023 --status applied
+```

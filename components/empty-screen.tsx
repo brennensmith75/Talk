@@ -21,8 +21,8 @@ const exampleMessages = [
 
 export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
   return (
-    <div className="max-w-2xl px-4 mx-auto">
-      <div className="p-8 border rounded-lg bg-background">
+    <div className="mx-auto max-w-2xl px-4">
+      <div className="rounded-lg border bg-background p-8">
         <h1 className="mb-2 text-lg font-semibold">
           Welcome to 🐣 Smol Talk!
           <small className="text-xs text-transparent">find the secret password</small>

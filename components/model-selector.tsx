@@ -84,14 +84,14 @@ export function ModelSelector({
             role="combobox"
             aria-expanded={open}
             aria-label="Select a model"
-            className="justify-between overflow-hidden w-15 text-ellipsis whitespace-nowrap"
+            className="w-15 justify-between truncate"
           >
             {model ? model.name : 'Select a model...'}
-            <IconChevronUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
+            <IconChevronUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
-          <div className="flex flex-col items-start px-2 py-4 space-y-2 border-b-2 rounded-t-2xl bg-background text-foreground border-b-foreground">
+          <div className="flex flex-col items-start space-y-2 rounded-t-2xl border-b-2 border-b-foreground bg-background px-2 py-4 text-foreground">
             <Link href="/" className="h-auto p-0 text-sm">
               <Button
                 onClick={e => {
@@ -137,7 +137,7 @@ export function ModelSelector({
                   {peekedModel.description}
                 </div>
                 {peekedModel.strengths ? (
-                  <div className="grid gap-2 mt-4">
+                  <div className="mt-4 grid gap-2">
                     <h5 className="text-sm font-medium leading-none">
                       Strengths
                     </h5>

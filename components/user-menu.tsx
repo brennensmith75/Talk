@@ -27,7 +27,7 @@ function getUserInitials(name: string) {
 
 export function UserMenu({ user }: UserMenuProps) {
   const router = useRouter()
-  const path = usePathname();
+  const path = usePathname()
 
   // Create a Supabase client configured to use cookies
   const supabase = createClientComponentClient()
@@ -46,7 +46,7 @@ export function UserMenu({ user }: UserMenuProps) {
               <Image
                 height={60}
                 width={60}
-                className="w-6 h-6 transition-opacity duration-300 rounded-full select-none ring-1 ring-zinc-100/10 hover:opacity-80"
+                className="h-6 w-6 select-none rounded-full ring-1 ring-zinc-100/10 transition-opacity duration-300 hover:opacity-80"
                 src={
                   user?.user_metadata.avatar_url
                     ? `${user.user_metadata.avatar_url}&s=60`
@@ -55,7 +55,7 @@ export function UserMenu({ user }: UserMenuProps) {
                 alt={user.user_metadata.name ?? 'Avatar'}
               />
             ) : (
-              <div className="flex items-center justify-center text-xs font-medium uppercase rounded-full select-none h-7 w-7 shrink-0 bg-muted/50 text-muted-foreground">
+              <div className="flex h-7 w-7 shrink-0 select-none items-center justify-center rounded-full bg-muted/50 text-xs font-medium uppercase text-muted-foreground">
                 {user?.user_metadata.name
                   ? getUserInitials(user?.user_metadata.name)
                   : null}
@@ -68,12 +68,13 @@ export function UserMenu({ user }: UserMenuProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent sideOffset={8} align="start" className="w-[180px]">
-          <DropdownMenuItem onClick={() => router.push('/profile')} className="flex-col items-start cursor-pointer">
-	          <div className="text-xs font-medium">
-	            Profile
-	          </div>
+          <DropdownMenuItem
+            onClick={() => router.push('/settings')}
+            className="cursor-pointer flex-col items-start"
+          >
+            <div className="text-xs font-medium">Settings</div>
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex-col items-start cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer flex-col items-start">
             <div className="text-xs font-medium">
               {user?.user_metadata.name}
             </div>
@@ -91,16 +92,23 @@ export function UserMenu({ user }: UserMenuProps) {
               <IconExternalLink className="w-3 h-3 ml-auto" />
             </a>
           </DropdownMenuItem> */}
-          <DropdownMenuItem onClick={signOut} className="text-xs text-red-300 cursor-pointer hover:bg-red-700">
+          <DropdownMenuItem
+            onClick={signOut}
+            className="cursor-pointer text-xs text-red-300 hover:bg-red-700"
+          >
             Log Out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {path === '/profile' &&
-        <Button variant={'default'} onClick={() => router.push('/')} className='flex flex-row items-center ml-4'>
-          <HomeIcon className='w-4 h-4 mr-2' /> Home
+      {path.includes('/settings') && (
+        <Button
+          variant={'default'}
+          onClick={() => router.push('/')}
+          className="ml-4 flex flex-row items-center"
+        >
+          <HomeIcon className="mr-2 h-4 w-4" /> Home
         </Button>
-      }
+      )}
     </div>
   )
 }
