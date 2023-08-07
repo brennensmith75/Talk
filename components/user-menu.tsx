@@ -1,8 +1,10 @@
 'use client'
 
+import {
+  createClientComponentClient,
+  type Session
+} from '@supabase/auth-helpers-nextjs'
 import Image from 'next/image'
-import { type Session } from '@supabase/auth-helpers-nextjs'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
@@ -13,8 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { IconExternalLink } from '@/components/ui/icons'
-import { ChatBubbleIcon, HomeIcon } from '@radix-ui/react-icons'
+import { HomeIcon } from '@radix-ui/react-icons'
 
 export interface UserMenuProps {
   user: Session['user']

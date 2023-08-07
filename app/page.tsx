@@ -6,7 +6,6 @@ import { cookies } from 'next/headers'
 export const runtime = 'edge'
 
 export default async function IndexPage() {
-  console.log('IndexPage')
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
 

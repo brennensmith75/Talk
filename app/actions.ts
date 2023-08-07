@@ -1,14 +1,16 @@
 'use server'
 import 'server-only'
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+
 import { Database } from '@/lib/db_types'
+import {
+  createServerActionClient,
+  type User
+} from '@supabase/auth-helpers-nextjs'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { type User } from '@supabase/auth-helpers-nextjs'
 
 import { type Chat } from '@/lib/types'
-import { auth } from '@/auth'
 
 function nanoid() {
   return Math.random().toString(36).slice(2) // random id up to 11 chars
@@ -94,6 +96,7 @@ export async function clearChats() {
     const supabase = createServerActionClient<Database>({
       cookies: () => cookieStore
     })
+
     await supabase.from('chats').delete().throwOnError()
     revalidatePath('/')
     return redirect('/')

@@ -78,13 +78,15 @@ npx supabase gen types typescript --project-id "<project-ref>" --schema public >
 
 ## Authors
 
+## Migrations
+
 ```
 $ npx supabase migration list
 
-Enter your database password: 
+Enter your database password:
 Retrying... db.xxxxxxxxxxx.supabase.co 5432
 
-  
+
         LOCAL      │     REMOTE     │     TIME (UTC)
   ─────────────────┼────────────────┼──────────────────────
     20230707053030 │ 20230707053030 │ 2023-07-07 05:30:30
