@@ -161,7 +161,7 @@ export function PersonaForm({
                         type="button"
                         onClick={onRemovePersona}
                         variant="destructive"
-                        isLoading={isRemoving}
+                        loading={isRemoving}
                         disabled={isSubmitting || isRemoving}
                       >
                         Remove
@@ -182,7 +182,7 @@ export function PersonaForm({
                       disabled={
                         !isDirty || !isValid || isRemoving || isSubmitting
                       }
-                      isLoading={isSubmitting}
+                      loading={isSubmitting}
                     >
                       Save
                     </Button>

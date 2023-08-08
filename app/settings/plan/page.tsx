@@ -1,4 +1,5 @@
 import {
+  getActiveProductsWithPrices,
   getSession,
   getSubscription,
   getUserDetails
@@ -9,9 +10,10 @@ import { Separator } from '../../../components/ui/separator'
 import ProductDetail from './ProductDetail'
 
 export default async function Account() {
-  const [session, userDetails, subscription] = await Promise.all([
+  const [session, userDetails, products, subscription] = await Promise.all([
     getSession(),
     getUserDetails(),
+    getActiveProductsWithPrices(),
     getSubscription()
   ])
 
@@ -38,10 +40,14 @@ export default async function Account() {
         </p>
       </div>
       <Separator />
-      <ProductDetail
-        session={session}
-        plan={{ name: 'Smol Talk Plus', price: 20 }}
-      />
+      {products.map(product => (
+        <ProductDetail
+          key={product.id}
+          session={session}
+          product={product}
+          subscription={subscription}
+        />
+      ))}
     </div>
   )
 }
