@@ -16,6 +16,7 @@ const relevantEvents = new Set([
   'customer.subscription.created',
   'customer.subscription.updated',
   'customer.subscription.deleted'
+  // note - we will reduce the events sent from stripe's side to this list, so if you add to this list in future also remember to add on stripe's side
 ])
 
 export async function POST(req: Request) {
