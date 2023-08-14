@@ -5,8 +5,10 @@ import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { fontMono, fontSans } from '@/lib/fonts'
 import { cn } from '@/lib/utils'
 import { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'react-hot-toast'
+import { auth } from '../auth'
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +31,11 @@ interface RootLayoutProps {
   children: React.ReactNode
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const cookieStore = cookies()
+  const session = await auth({ cookieStore })
+  const user = session?.user
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -40,12 +46,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontMono.variable
         )}
       >
-        <NextTopLoader />
-        <Toaster />
         <Providers attribute="class" defaultTheme="system" enableSystem>
+          <NextTopLoader />
+          <Toaster />
           <div className="flex min-h-screen flex-col">
-            {/* @ts-ignore */}
-            <Header />
+            <Header user={user} />
             <main className="flex flex-1 flex-col bg-muted/50">{children}</main>
           </div>
           <TailwindIndicator />

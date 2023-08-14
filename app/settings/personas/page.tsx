@@ -1,14 +1,10 @@
-import { Personas } from '@/app/settings/personas/personas'
 import { Separator } from '@/components/ui/separator'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { auth } from '../../../auth'
-import { getPrompts } from '../../actions'
-
-type Prompts = {
-  prompt_name: string
-  prompt_body: string
-}[]
+import { getPersonas } from '../../actions'
+import { PersonasList } from './personas-list'
+import { Persona } from '../../../constants/personas'
 
 export default async function SettingsPersonasPage() {
   const cookieStore = cookies()
@@ -19,7 +15,7 @@ export default async function SettingsPersonasPage() {
     redirect('/sign-in')
   }
 
-  const prompts = (await getPrompts(user)) as Prompts
+  const personas = (await getPersonas(user)) as Persona[]
 
   return (
     <div className="space-y-6">
@@ -31,7 +27,7 @@ export default async function SettingsPersonasPage() {
         </p>
       </div>
       <Separator />
-      <Personas prompts={prompts} user={user} />
+      <PersonasList personas={personas} user={user} />
     </div>
   )
 }

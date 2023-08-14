@@ -1,13 +1,11 @@
 'use client'
 
-import { useChat, type Message, UseChatOptions } from 'ai/react'
+import { UseChatOptions, useChat, type Message } from 'ai/react'
 
-import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
 import { ChatPanel } from '@/components/chat-panel'
-import { EmptyScreen } from '@/components/empty-screen'
 import { ChatScrollAnchor } from '@/components/chat-scroll-anchor'
-import { useLocalStorage } from '@/lib/hooks/use-local-storage'
+import { EmptyScreen } from '@/components/empty-screen'
 import {
   Dialog,
   DialogContent,
@@ -16,20 +14,24 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useState } from 'react'
+import { Model, models } from '@/constants/models'
+import { useLocalStorage } from '@/lib/hooks/use-local-storage'
+import { SmolTalkMessage } from '@/lib/types'
+import { cn } from '@/lib/utils'
+import { useEffect, useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { getPersonas } from '../app/actions'
+import { Persona } from '../constants/personas'
+import { usePersonaStore } from '../lib/usePersonaStore'
+import { AlertAuth } from './alert-auth'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { toast } from 'react-hot-toast'
-import { Model, models } from '@/constants/models'
-import { AlertAuth } from './alert-auth'
-import { SmolTalkMessage } from '@/lib/types'
-import { Session } from '@supabase/supabase-js'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
   id?: string
-  userId?: string
+  user: any
 }
 
 function useSmolTalkChat(
@@ -46,7 +48,8 @@ function useSmolTalkChat(
   })
 }
 
-export function Chat({ userId, id, initialMessages, className }: ChatProps) {
+export function Chat({ user, id, initialMessages, className }: ChatProps) {
+  const { persona, setPersonas } = usePersonaStore()
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
     null
@@ -62,9 +65,9 @@ export function Chat({ userId, id, initialMessages, className }: ChatProps) {
       id,
       body: {
         id,
-        //   previewToken
         previewToken,
-        model: model
+        model: model,
+        persona: persona
       },
       // SWYXTODO: check this 401 issue?
       onResponse(response) {
@@ -73,6 +76,14 @@ export function Chat({ userId, id, initialMessages, className }: ChatProps) {
         }
       }
     })
+
+  useEffect(() => {
+    const fetchPersonas = async () => {
+      const result = (await getPersonas(user)) as Persona[]
+      setPersonas(result)
+    }
+    fetchPersonas()
+  }, [setPersonas, user])
 
   const isAuthError = error?.message.includes('Unauthorized')
 
@@ -100,7 +111,7 @@ export function Chat({ userId, id, initialMessages, className }: ChatProps) {
         setInput={setInput}
         setModel={setModel}
         model={model}
-        userId={userId}
+        user={user}
       />
 
       <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>

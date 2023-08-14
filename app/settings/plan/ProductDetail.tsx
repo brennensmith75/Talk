@@ -80,7 +80,7 @@ const ProductDetail = ({ product, session, subscription }: Props) => {
     const priceInterval = price.interval === 'month' ? 'mo' : 'yr'
 
     return `${priceString}/${priceInterval}`
-  }, [product.prices])
+  }, [price.currency, price.interval, price.unit_amount])
 
   const isSubscribed = useCallback(
     (priceId: string) => {
