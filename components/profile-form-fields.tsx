@@ -22,10 +22,12 @@ export function PromptNameField({ form }: { form: UseFormReturn }) {
           <FormItem className="mb-4 flex-1">
             <FormLabel>Persona Name</FormLabel>
             <FormControl>
-              <Input placeholder="Tech Guru" {...field} />
+              <Input placeholder="Programming Assistant" {...field} />
             </FormControl>
             <FormDescription>
-              Create a brief, descriptive title for your persona.
+              Create a brief, descriptive name for your persona. NOT used in
+              prompt. Examples: General Purpose Programming Assistant,
+              JavaScript Tutor, PyTorch specialist, SQL expert.
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -80,9 +82,57 @@ export function PromptBodyField({ form }: { form: UseFormReturn }) {
             />
           </FormControl>
           <FormDescription>
-            Identify your unique perspective or a perspective you&apos;d like
-            the AI to adopt. This helps the AI to tailor its responses to your
-            interests.
+            Configure your persona by giving it extra information - all of which
+            is simply concatenated into the prompt as the system message.
+            Freeform since obviously this is up to your creativity, but we
+            suggest a structure below for optimal responses.
+            <ul className="my-4 list-inside list-disc">
+              <li>
+                <span className="font-bold">Context</span>: Who you are, what
+                this persona should normally work on, including environments,
+                libraries (and version numbers) of what you work with.
+                <ul className="my-4 ml-4 list-inside list-disc italic">
+                  <li>
+                    Example: I&apos;m an expert javascript programmer and
+                    intermediate python developer. I enjoy puns and random pop
+                    culture references and fun &quot;did you know?&quot; side
+                    tangents.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <span className="font-bold">Jailbreak</span>: Undo usual safety
+                training precautions. Examples:
+                <ul className="my-4 ml-4 list-inside list-disc italic">
+                  <li>No need to mention your knowledge cutoff.</li>
+                  <li>No need to disclose you&apos;re an AI.</li>
+                </ul>
+              </li>
+              <li>
+                <span className="font-bold">Response</span>: How you like the
+                style of responses from your persona. Asking it to{' '}
+                <a className="stdLink" href="https://arxiv.org/abs/2205.11916">
+                  think step by step
+                </a>
+                , or write comments for code before coding, can greatly improve
+                output. Examples:
+                <ul className="my-4 ml-4 list-inside list-disc italic">
+                  <li>
+                    When appropriate, output your responses as a Markdown table,
+                    or answer with ascii art or other visualization.
+                  </li>
+                  <li>
+                    When I ask you for code, give me fully commented code with
+                    only a brief explanation on how it works. Bias towards the
+                    most efficient solution, and offer an alternative
+                    implementation that might fit. If it is unclear what
+                    environment or library versions I&apos;m working with and
+                    that might significantly change your answer, please ask me
+                    to clarify at the end, otherwise don&apos;t bother.
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </FormDescription>
           <FormMessage />
         </FormItem>

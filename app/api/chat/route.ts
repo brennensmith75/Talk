@@ -1,18 +1,21 @@
-import 'server-only'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { Configuration, OpenAIApi } from 'smolai'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { ServerActionResult } from '@/lib/types'
-import { getPrompts, Prompt } from '../../actions'
-import { type User } from '@supabase/auth-helpers-nextjs'
+import {
+  createRouteHandlerClient,
+  type User
+} from '@supabase/auth-helpers-nextjs'
+import { OpenAIStream, StreamingTextResponse } from 'ai'
+import { cookies } from 'next/headers'
+import 'server-only'
+import { Configuration, OpenAIApi } from 'smolai'
+import { getPersonaById } from '../../actions'
 
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 // import { z } from 'zod'
 // import { zValidateReq } from '@/lib/validate'
 import { envs } from '@/constants/envs'
+import { Persona } from '../../../constants/personas'
 
 export const runtime = 'edge'
 
@@ -44,7 +47,7 @@ export async function POST(req: Request) {
   })
 
   const json = await req.json()
-  const { messages, previewToken, model } = json
+  const { messages, previewToken, model, persona } = json
 
   console.log('chat/route POST', json)
   const userId = (await auth({ cookieStore }))?.user.id
@@ -57,16 +60,19 @@ export async function POST(req: Request) {
   When asked for a summary, respond with 3-4 highlights per section with important keywords, people, numbers, and facts bolded.
 
   End every conversation by suggesting 2 options for followup: one for checking your answer, the other for extending your answer in an interesting way.`
-  let storedPrompts: Awaited<ServerActionResult<Prompt[]>>
-  if (userId) {
+  let storedPersona: Awaited<ServerActionResult<Persona>>
+  if (userId && persona?.id) {
     // @ts-ignore
-    storedPrompts = await getPrompts({ id: userId } as User)
+    storedPersona = await getPersonaById(
+      { id: userId } as User,
+      { id: persona.id } as Persona
+    )
     // @ts-ignore
-    if (storedPrompts[0].id !== null || storedPrompts.error === undefined) {
+    if (storedPersona?.id !== null || storedPersona?.error === undefined) {
       // @ts-ignore
-      console.log('storedPrompts', storedPrompts)
+      console.log('storedPersona', storedPersona)
       // @ts-ignore
-      systemPrompt = storedPrompts?.[0]?.prompt_body
+      systemPrompt = storedPersona?.prompt_body
     }
   }
 

@@ -42,11 +42,14 @@ export function PersonaForm({
     prompt_emoji: z.string().optional()
   }
 
+  const emojiset = '🤖 ✨ 🙏 🥰 🥺 🔥 🚢 🚀 🐍 🐣'
+  // randomly select from emojiset
+  const randomEmoji = emojiset.split(' ')[Math.floor(Math.random() * 10)]
   const defaultValues: any = {
     prompt_id: prompt.id || null,
     prompt_name: prompt.prompt_name || '',
     prompt_body: prompt.prompt_body || '',
-    prompt_emoji: prompt.emoji || '🤖'
+    prompt_emoji: prompt.emoji || randomEmoji
   }
 
   const finalFormSchema = z.object(formSchema)

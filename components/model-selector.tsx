@@ -1,11 +1,10 @@
 'use client'
 
-import * as React from 'react'
 import { PopoverProps } from '@radix-ui/react-popover'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-// import { cn } from '@/lib/utils'
-import { useMutationObserver } from '@/lib/hooks/use-mutation-observer'
+import { useRouter } from 'next/navigation'
+import * as React from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -19,19 +18,20 @@ import {
   HoverCardContent,
   HoverCardTrigger
 } from '@/components/ui/hover-card'
+import { useMutationObserver } from '@/lib/hooks/use-mutation-observer'
 
+import {
+  IconArrowRight,
+  IconChevronUpDown,
+  IconPlus
+} from '@/components/ui/icons'
+import { Label } from '@/components/ui/label'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
 import { Model, models, types } from '@/constants/models'
-import { Label } from '@/components/ui/label'
-import {
-  IconPlus,
-  IconArrowRight,
-  IconChevronUpDown
-} from '@/components/ui/icons'
 
 interface ModelSelectorProps extends PopoverProps {
   setModel: (model: Model) => void
@@ -203,6 +203,7 @@ function ModelItem({ model, isSelected, onSelect, onPeek }: ModelItemProps) {
     <CommandItem
       key={model.id}
       onSelect={onSelect}
+      onMouseEnter={() => onPeek(model)}
       ref={ref}
       className="aria-selected:bg-primary aria-selected:text-primary-foreground"
     >

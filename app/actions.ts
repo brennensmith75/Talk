@@ -11,6 +11,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { type Chat } from '@/lib/types'
+import { Persona } from '../constants/personas'
 
 function nanoid() {
   return Math.random().toString(36).slice(2) // random id up to 11 chars
@@ -142,7 +143,7 @@ export async function shareChat(chat: Chat) {
   return payload
 }
 
-export async function getPrompts(user: User) {
+export async function getPersonas(user: User) {
   try {
     const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
@@ -156,9 +157,9 @@ export async function getPrompts(user: User) {
       .eq('user_id', user.id)
       .is('deleted_at', null)
 
-    const prompts: Prompt[] = data || []
+    const personas: Persona[] = data || []
 
-    return prompts
+    return personas
   } catch (error) {
     console.log('get prompts error', error)
     return {
@@ -167,20 +168,29 @@ export async function getPrompts(user: User) {
   }
 }
 
-export type Prompt = {
-  id: number | null
-  prompt_name: string
-  prompt_body: string
-  emoji: string | null
-  deleted_at?: Date | null
-}
+export async function getPersonaById(user: User, persona: Persona) {
+  try {
+    const cookieStore = cookies()
+    const supabase = createServerActionClient<Database>({
+      cookies: () => cookieStore
+    })
 
-export type PromptGroups = {
-  [index: string]: {
-    id?: string
-    name?: string
-    body?: string
-    emoji?: string
+    const { data, error } = await supabase
+      .from('prompts')
+      .select('id, prompt_name, prompt_body, emoji')
+      .eq('user_id', user.id)
+      .eq('id', persona.id)
+      .is('deleted_at', null)
+      .maybeSingle()
+
+    const storedPersona: Persona | null = data || null
+
+    return storedPersona
+  } catch (error) {
+    console.log('get persona by ID error', error)
+    return {
+      error: 'Unauthorized'
+    }
   }
 }
 
