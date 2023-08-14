@@ -32,14 +32,16 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   userId?: string
 }
 
-function useSmolTalkChat(opts: UseChatOptions & {
-  initialMessages?: SmolTalkMessage[] // overriding just to fit our needs
-}) {
+function useSmolTalkChat(
+  opts: UseChatOptions & {
+    initialMessages?: SmolTalkMessage[] // overriding just to fit our needs
+  }
+) {
   const { initialMessages, ...rest } = opts
   return useChat({
     ...rest,
     initialMessages: initialMessages?.map(message => ({
-      ...message,
+      ...message
     }))
   })
 }
@@ -69,7 +71,7 @@ export function Chat({ userId, id, initialMessages, className }: ChatProps) {
         if (response.status === 401) {
           toast.error(response.statusText)
         }
-      },
+      }
     })
 
   const isAuthError = error?.message.includes('Unauthorized')

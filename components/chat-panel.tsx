@@ -1,13 +1,11 @@
 import { type UseChatHelpers } from 'ai/react'
 
-import { Button } from '@/components/ui/button'
-import { PromptForm } from '@/components/prompt-form'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
+import { PromptForm } from '@/components/prompt-form'
+import { Button } from '@/components/ui/button'
 import { IconRefresh, IconStop } from '@/components/ui/icons'
 // import { FooterText } from '@/components/footer'
 import { Model } from '@/constants/models'
-import { upsertChat } from '@/app/actions'
-import { Session } from '@supabase/supabase-js'
 
 export interface ChatPanelProps
   extends Pick<

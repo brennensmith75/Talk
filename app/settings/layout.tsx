@@ -1,12 +1,11 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
 
 import { SidebarNav } from '@/app/settings/components/sidebar-nav'
 import { Separator } from '@/components/ui/separator'
 
 export const metadata: Metadata = {
-  title: 'Forms',
-  description: 'Advanced form example using react-hook-form and Zod.'
+  title: 'Settings',
+  description: 'Smol Talk settings page.'
 }
 
 const sidebarNavItems = [
@@ -17,11 +16,11 @@ const sidebarNavItems = [
   {
     title: 'Personas',
     href: '/settings/personas'
+  },
+  {
+    title: 'My Plan',
+    href: '/settings/plan'
   }
-  // {
-  //   title: 'Appearance',
-  //   href: '/profile/appearance'
-  // },
 ]
 
 interface SettingsLayoutProps {
