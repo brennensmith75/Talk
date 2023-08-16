@@ -9,8 +9,10 @@ import { cookies } from 'next/headers'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'react-hot-toast'
 import { auth } from '../auth'
+import { getURL } from '../lib/helpers'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getURL()),
   title: {
     default: '🐣 Smol Talk',
     template: `%s - Smol Talk`
@@ -24,6 +26,16 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png'
+  },
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/en-US',
+      'de-DE': '/de-DE'
+    }
+  },
+  openGraph: {
+    images: '/og-image.png'
   }
 }
 

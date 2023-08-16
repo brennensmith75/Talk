@@ -2,10 +2,12 @@
 
 import { UseChatOptions, useChat, type Message } from 'ai/react'
 
+import { getPersonas } from '@/app/actions'
 import { ChatList } from '@/components/chat-list'
 import { ChatPanel } from '@/components/chat-panel'
 import { ChatScrollAnchor } from '@/components/chat-scroll-anchor'
 import { EmptyScreen } from '@/components/empty-screen'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -14,18 +16,21 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { Model, models } from '@/constants/models'
+import { Persona } from '@/constants/personas'
+import {
+  processSearchResult,
+  searchTheWeb
+} from '@/lib/functions/chat-functions'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { SmolTalkMessage } from '@/lib/types'
-import { cn } from '@/lib/utils'
+import { usePersonaStore } from '@/lib/usePersonaStore'
+import { cn, nanoid } from '@/lib/utils'
+import { ChatRequest, FunctionCallHandler } from 'ai'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { getPersonas } from '../app/actions'
-import { Persona } from '../constants/personas'
-import { usePersonaStore } from '../lib/usePersonaStore'
 import { AlertAuth } from './alert-auth'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -47,6 +52,84 @@ function useSmolTalkChat(
     }))
   })
 }
+
+/* ========================================================================== */
+/* Function Call Handler                                                      */
+/* ========================================================================== */
+
+const functionCallHandler: FunctionCallHandler = async (
+  chatMessages,
+  functionCall
+) => {
+  let functionResponse: ChatRequest
+
+  /* ========================================================================== */
+  /* Handle searchTheWeb function call                                          */
+  /* ========================================================================== */
+
+  if (functionCall.name === 'searchTheWeb') {
+    if (functionCall.arguments) {
+      const parsedFunctionCallArguments = JSON.parse(functionCall.arguments)
+      const results = await searchTheWeb(parsedFunctionCallArguments.query)
+      return (functionResponse = {
+        messages: [
+          ...chatMessages,
+          {
+            id: nanoid(),
+            name: 'searchTheWeb',
+            role: 'function' as const,
+            content: JSON.stringify({
+              query: functionCall.arguments.query,
+              results:
+                results ||
+                'Sorry, I could not find anything on the internet about that.'
+            })
+          }
+        ]
+      })
+    }
+  }
+
+  /* ========================================================================== */
+  /* Handle processSearchResult function call                                   */
+  /* ========================================================================== */
+
+  if (functionCall.name === 'processSearchResult') {
+    const parsedFunctionCallArguments = JSON.parse(functionCall.arguments)
+    const processedContent = await processSearchResult(
+      parsedFunctionCallArguments.id
+    )
+
+    const { title, url, id, publishedDate, author, score } =
+      functionCall.arguments
+
+    return (functionResponse = {
+      messages: [
+        ...chatMessages,
+        {
+          id: nanoid(),
+          name: 'processSearchResult',
+          role: 'function' as const,
+          content: JSON.stringify({
+            link: {
+              title: title,
+              url: url,
+              publishedDate: publishedDate || null,
+              author: author || null,
+              score: score || null,
+              id: id
+            },
+            results: processedContent
+          })
+        }
+      ]
+    })
+  }
+}
+
+/* ========================================================================== */
+/* Chat Component                                                             */
+/* ========================================================================== */
 
 export function Chat({ user, id, initialMessages, className }: ChatProps) {
   const { persona, setPersonas } = usePersonaStore()
@@ -74,7 +157,8 @@ export function Chat({ user, id, initialMessages, className }: ChatProps) {
         if (response.status === 401) {
           toast.error(response.statusText)
         }
-      }
+      },
+      experimental_onFunctionCall: functionCallHandler
     })
 
   useEffect(() => {
@@ -113,11 +197,14 @@ export function Chat({ user, id, initialMessages, className }: ChatProps) {
         model={model}
         user={user}
       />
-
+      {/* @ts-ignore */}
       <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>
+        {/* @ts-ignore */}
         <DialogContent>
           <DialogHeader>
+            {/* @ts-ignore */}
             <DialogTitle>Enter your OpenAI Key</DialogTitle>
+            {/* @ts-ignore */}
             <DialogDescription>
               If you have not obtained your OpenAI API key, you can do so by{' '}
               <a

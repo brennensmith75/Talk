@@ -23,3 +23,10 @@ export type ServerActionResult<Result> = Promise<
     }
 >
 
+export type PromptTemplateValues = {
+  date?: Date;
+  personaName?: string;
+  personaBody?: string;
+};
+
+export type TemplateFunction = (values?: PromptTemplateValues) => string;
