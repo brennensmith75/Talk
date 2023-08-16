@@ -10,8 +10,8 @@ import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { Persona } from '@/constants/personas'
 import { type Chat } from '@/lib/types'
-import { Persona } from '../constants/personas'
 
 function nanoid() {
   return Math.random().toString(36).slice(2) // random id up to 11 chars
