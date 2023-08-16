@@ -60,12 +60,12 @@ export function PromptForm({
       }}
       ref={formRef}
     >
-      <div className="relative flex flex-row w-full bg-background sm:rounded-md sm:border sm:px-4">
-        <div className="absolute bottom-0 flex gap-2 right-2 sm:relative sm:mt-4">
+      <div className="relative flex w-full flex-row bg-background sm:rounded-md sm:border sm:px-4">
+        <div className="absolute bottom-0 right-2 flex gap-2 sm:relative sm:mt-4">
           <PersonaSelector user={user} />
         </div>
 
-        <div className="absolute right-0 flex justify-center gap-2 top-4 sm:right-6">
+        <div className="absolute right-0 top-4 flex justify-center gap-2 sm:right-6">
           <Button
             id="smol-submitbtn"
             type="submit"

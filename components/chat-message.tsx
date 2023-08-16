@@ -29,9 +29,13 @@ export interface ChatMessageProps {
 const ShowMoreButton = ({ onClick }: { onClick: () => void }) => (
   <div
     onClick={onClick}
-    className="absolute inset-x-0 bottom-0 flex h-40 items-end justify-center bg-gradient-to-t from-[#18181a] to-transparent shadow-lg"
+    className="absolute inset-x-0 bottom-0 flex h-40 items-end justify-center bg-gradient-to-t from-[#f9f9fa] dark:from-[#18181a] to-transparent shadow-lg"
   >
-    <Button onClick={onClick} className="mb-4">
+    <Button
+      variant={'outline'}
+      onClick={onClick}
+      className="mb-4 bg-background"
+    >
       Show more <ArrowDownIcon className="ml-1" />
     </Button>
   </div>
@@ -69,6 +73,10 @@ const RenderFunctionMessage = ({ message }: ChatMessageProps) => {
   } else if (message.name === 'processSearchResult') {
     const result = JSON.parse(message.content)?.results
     const link = JSON.parse(message.content)?.link
+    const extract = result.extract
+      ?.replace(/(<([^>]+)>)/gi, ' ')
+      .trim()
+      ?.replace(/\n\s*\n\s*\n/g, '\n\n')
 
     return (
       <div className="prose dark:prose-invert">
@@ -81,13 +89,7 @@ const RenderFunctionMessage = ({ message }: ChatMessageProps) => {
           <Link href={result.url} target="_blank" className="font-medium">
             {result?.title}
           </Link>
-          :
-          <p className="whitespace-pre-line">
-            {result.extract
-              .replace(/(<([^>]+)>)/gi, ' ')
-              .trim()
-              .replace(/\n\s*\n\s*\n/g, '\n\n')}
-          </p>
+          :<p className="whitespace-pre-line">{extract}</p>
         </div>
         {!isOpen && <ShowMoreButton onClick={() => setIsOpen(true)} />}
       </div>
