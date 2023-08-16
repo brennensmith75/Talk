@@ -98,9 +98,11 @@ export async function clearChats() {
       cookies: () => cookieStore
     })
 
-    await supabase.from('chats').delete().throwOnError()
+    const userId = (await supabase.auth.getUser())?.data?.user?.id
+
+    await supabase.from('chats').delete().eq('user_id', userId).throwOnError()
     revalidatePath('/')
-    return redirect('/')
+    return revalidatePath('/')
   } catch (error) {
     console.log('clear chats error', error)
     return {
