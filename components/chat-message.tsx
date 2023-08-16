@@ -29,7 +29,7 @@ export interface ChatMessageProps {
 const ShowMoreButton = ({ onClick }: { onClick: () => void }) => (
   <div
     onClick={onClick}
-    className="absolute inset-x-0 bottom-0 flex h-40 items-end justify-center bg-gradient-to-t from-[#f9f9fa] dark:from-[#18181a] to-transparent shadow-lg"
+    className="absolute inset-x-0 bottom-0 flex h-40 items-end justify-center bg-gradient-to-t from-[#f9f9fa] to-transparent shadow-lg dark:from-[#18181a]"
   >
     <Button
       variant={'outline'}
@@ -73,7 +73,7 @@ const RenderFunctionMessage = ({ message }: ChatMessageProps) => {
   } else if (message.name === 'processSearchResult') {
     const result = JSON.parse(message.content)?.results
     const link = JSON.parse(message.content)?.link
-    const extract = result.extract
+    const extract = result?.extract
       ?.replace(/(<([^>]+)>)/gi, ' ')
       .trim()
       ?.replace(/\n\s*\n\s*\n/g, '\n\n')
