@@ -1,8 +1,8 @@
+import { auth } from '@/auth'
 import ProfileForm from '@/components/profile-form'
 import { Separator } from '@/components/ui/separator'
-import { redirect } from 'next/navigation'
-import { auth } from '../../auth'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export default async function SettingsProfilePage() {
   const cookieStore = cookies()

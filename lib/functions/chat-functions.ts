@@ -7,8 +7,8 @@ export const searchTheWeb = async (query: string) => {
     const response = await fetch('/api/search', {
       method: 'POST',
       headers: {
-        'accept': 'application/json',
-        'content-type': 'application/json',
+        accept: 'application/json',
+        'content-type': 'application/json'
       },
       body: JSON.stringify({ query })
     })
@@ -18,9 +18,8 @@ export const searchTheWeb = async (query: string) => {
       return
     }
 
-    const data = await response.json();
-    return data;
-
+    const data = await response.json()
+    return data
   } catch (error) {
     console.error(error)
   }
@@ -33,10 +32,10 @@ export const searchTheWeb = async (query: string) => {
 export const processSearchResult = async (id: string) => {
   try {
     const res = await fetch(`/api/process?id=${id}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
-        'accept': 'application/json',
-        'content-type': 'application/json',
+        accept: 'application/json',
+        'content-type': 'application/json'
       }
     })
 
@@ -45,9 +44,8 @@ export const processSearchResult = async (id: string) => {
       return
     }
 
-    const data = await res.json();
-    return data;
-
+    const data = await res.json()
+    return data
   } catch (error) {
     console.error(error)
   }

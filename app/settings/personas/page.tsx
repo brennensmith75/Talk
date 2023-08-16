@@ -1,10 +1,10 @@
+import { auth } from '@/auth'
 import { Separator } from '@/components/ui/separator'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { auth } from '../../../auth'
+import { Persona } from '../../../constants/personas'
 import { getPersonas } from '../../actions'
 import { PersonasList } from './personas-list'
-import { Persona } from '../../../constants/personas'
 
 export default async function SettingsPersonasPage() {
   const cookieStore = cookies()

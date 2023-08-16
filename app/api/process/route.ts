@@ -1,25 +1,46 @@
+import { auth } from '@/auth'
+import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
 
-export async function GET(req: NextRequest) {
-  try {
-    const metaphorKey = process.env.METAPHOR_API_KEY || ''
-    const id = req.nextUrl.searchParams.get('id')
-    const res = await fetch(`https://api.metaphor.systems/contents?ids=${id}`, {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        'content-type': 'application/json',
-        'x-api-key': metaphorKey
+export async function POST(req: NextRequest) {
+  if (req.method === 'POST') {
+    try {
+      const cookieStore = cookies()
+      const userId = (await auth({ cookieStore }))?.user.id
+
+      if (!userId) {
+        return new Response('Unauthorized', {
+          status: 401
+        })
       }
+
+      const metaphorKey = process.env.METAPHOR_API_KEY || ''
+      const id = req.nextUrl.searchParams.get('id')
+      const res = await fetch(
+        `https://api.metaphor.systems/contents?ids=${id}`,
+        {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            'x-api-key': metaphorKey
+          }
+        }
+      )
+      const data = await res.json()
+      const content = data.contents[0]
+      return NextResponse.json(content)
+    } catch (err) {
+      console.error(`Failed to process content: ${err}`)
+      return NextResponse.json({ content: undefined })
+    }
+  } else {
+    return new Response('Method Not Allowed', {
+      headers: { Allow: 'POST' },
+      status: 405
     })
-    const data = await res.json()
-    const content = data.contents[0]
-    return NextResponse.json(content)
-  } catch (err) {
-    console.error(`Failed to process content: ${err}`)
-    return NextResponse.json({ content: undefined })
   }
 }
 
