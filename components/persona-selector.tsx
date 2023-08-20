@@ -28,13 +28,14 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 
 import { useMutationObserver } from '@/lib/hooks/use-mutation-observer'
-import { usePersonaStore } from '../lib/usePersonaStore'
+import { usePersonaStore } from '@/lib/usePersonaStore'
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from './ui/tooltip'
+} from '@/components/ui/tooltip'
 
 interface PersonaSelectorProps extends PopoverProps {
   user: any
@@ -61,7 +62,7 @@ export function PersonaSelector({ user, ...props }: PersonaSelectorProps) {
         <HoverCardTrigger asChild></HoverCardTrigger>
         <HoverCardContent
           align="start"
-          className="w-[260px] text-sm"
+          className="w-[260px] whitespace-pre-line text-sm"
           side="left"
         />
       </HoverCard>
@@ -86,13 +87,14 @@ export function PersonaSelector({ user, ...props }: PersonaSelectorProps) {
               <p>{persona ? persona.prompt_name : 'Choose Persona'}</p>
             </TooltipContent>
           </Tooltip>
-          <PopoverContent align="end" className="w-[250px] p-0">
+          <PopoverContent align="start" className="w-[250px] p-0">
             <HoverCard>
               <HoverCardContent
                 side="left"
                 align="start"
+                hidden={!peekedPersona}
                 forceMount
-                className="hidden min-h-[40px] lg:block"
+                className="hidden min-h-[40px] whitespace-pre-line lg:block"
               >
                 <div className="grid gap-2">
                   <h4 className="font-medium leading-none">

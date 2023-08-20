@@ -1,11 +1,9 @@
-import { toDateTime } from './helpers'
-import { stripe } from './stripe'
+import type { Database } from '@/lib/db_types'
+import { toDateTime } from '@/lib/helpers'
+import { stripe } from '@/lib/stripe'
+import { Price, Product } from '@/lib/types'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
-import type { Database } from './db_types'
-
-type Product = Database['public']['Tables']['products']['Row']
-type Price = Database['public']['Tables']['prices']['Row']
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
@@ -178,8 +176,8 @@ const manageSubscriptionStatusChange = async (
 }
 
 export {
-  upsertProductRecord,
-  upsertPriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  upsertPriceRecord,
+  upsertProductRecord
 }

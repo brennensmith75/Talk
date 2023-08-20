@@ -1,9 +1,9 @@
 import { auth } from '@/auth'
 import { Separator } from '@/components/ui/separator'
+import { Persona } from '@/constants/personas'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { Persona } from '../../../constants/personas'
-import { getPersonas } from '../../actions'
+import { getPersonas } from '../../../actions'
 import { PersonasList } from './personas-list'
 
 export default async function SettingsPersonasPage() {

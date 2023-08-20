@@ -12,6 +12,8 @@ import { Configuration, OpenAIApi } from 'smolai'
 import { auth } from '@/auth'
 import { Persona } from '@/constants/personas'
 import { nanoid } from '@/lib/utils'
+// import { z } from 'zod'
+// import { zValidateReq } from '@/lib/validate'
 import { ChatCompletionFunctions } from 'smolai'
 import PromptBuilder from './prompt-builder'
 
@@ -151,12 +153,82 @@ export async function POST(req: Request) {
     console.log(key + ': ' + value)
   }
 
+  let id = json.id ?? nanoid()
+  const title = json.messages[0].content.substring(0, 100)
+  const createdAt = Date.now()
+  const path = `/chat/${id}`
+  let payload = {
+    id,
+    title,
+    userId,
+    createdAt,
+    path,
+    // TODO: store persona at the chat level
+    // otherwise we don't know what the prompt
+    // is at the time of sending the message
+    messages: [...messages]
+  }
+
+  const checkIfChatExists = async (chatId: string) => {
+    const { data } = await supabase
+      .from('chats')
+      .select('id')
+      .eq('id', chatId)
+      .single()
+
+    return data?.id ? true : false
+  }
+
+  const extractFirstUrl = async (content: string) => {
+    const regex = /(https?:\/\/[^\s]+)/g
+    const found = messages[0]?.content?.match(regex)
+
+    if (found && found.length > 0) {
+      const firstUrl = found[0]
+      console.log('✅', firstUrl) // Output the first URL found
+      return firstUrl
+    } else {
+      console.log('No URL found')
+      return null
+    }
+  }
+
+  // if this is the first message in a chat,
+  // check if the chat id already exists
+  if (messages?.length === 1) {
+    // while loop to check if chat id exists
+    // if it does, generate a new id
+    while (await checkIfChatExists(id)) {
+      id = nanoid()
+      payload = {
+        ...payload,
+        id,
+        path: `/chat/${id}`
+      }
+    }
+
+    await supabase.from('chats').insert({ id, payload }).throwOnError()
+
+    // extract the first url from the first message
+    const extractedUrl = await extractFirstUrl(messages[0]?.content)
+
+    if (extractedUrl) {
+      await supabase
+        .from('submissions')
+        .insert({
+          chat_id: id,
+          submitted_url: extractedUrl
+          //TODO add metadata from open graph
+          // meta: {}
+        })
+        .throwOnError()
+    }
+  } else {
+    await supabase.from('chats').update({ payload }).eq('id', id).throwOnError()
+  }
+
   const stream = OpenAIStream(res, {
     async onCompletion(completion) {
-      const title = json.messages[0].content.substring(0, 100)
-      const id = json.id ?? nanoid()
-      const createdAt = Date.now()
-      const path = `/chat/${id}`
       const payload = {
         id,
         title,
@@ -171,6 +243,7 @@ export async function POST(req: Request) {
           }
         ]
       }
+      console.log(payload)
 
       // Insert chat into database.
       await supabase.from('chats').upsert({ id, payload }).throwOnError()

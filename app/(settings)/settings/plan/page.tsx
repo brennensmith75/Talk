@@ -5,7 +5,7 @@ import {
   getUserDetails
 } from '@/app/supabase-server'
 import { redirect } from 'next/navigation'
-import { Separator } from '../../../components/ui/separator'
+import { Separator } from '../../../../components/ui/separator'
 
 import ProductDetail from './ProductDetail'
 

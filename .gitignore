@@ -35,7 +35,6 @@ yarn-error.log*
 .contentlayer
 .env
 .vercel
-.vscode
 .env*.local
 
 tsconfig.tsbuildinfo

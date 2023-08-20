@@ -14,6 +14,11 @@ export const getURL = () => {
   return url
 }
 
+export function getUserInitials(name: string) {
+  const [firstName, lastName] = name.split(' ')
+  return lastName ? `${firstName[0]}${lastName[0]}` : firstName.slice(0, 2)
+}
+
 export const postData = async ({
   url,
   data

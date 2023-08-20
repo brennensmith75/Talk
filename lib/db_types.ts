@@ -9,6 +9,33 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      artifacts: {
+        Row: {
+          ai_score: number | null
+          canonical_url: string | null
+          created_at: string | null
+          deleted_at: string | null
+          id: number
+          text_content: string | null
+        }
+        Insert: {
+          ai_score?: number | null
+          canonical_url?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: number
+          text_content?: string | null
+        }
+        Update: {
+          ai_score?: number | null
+          canonical_url?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: number
+          text_content?: string | null
+        }
+        Relationships: []
+      }
       chats: {
         Row: {
           id: string
@@ -172,6 +199,49 @@ export interface Database {
           }
         ]
       }
+      submissions: {
+        Row: {
+          artifact_id: number | null
+          chat_id: string | null
+          created_at: string | null
+          deleted_at: string | null
+          id: number
+          meta: Json | null
+          submitted_url: string | null
+        }
+        Insert: {
+          artifact_id?: number | null
+          chat_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: number
+          meta?: Json | null
+          submitted_url?: string | null
+        }
+        Update: {
+          artifact_id?: number | null
+          chat_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: number
+          meta?: Json | null
+          submitted_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_artifact_id_fkey"
+            columns: ["artifact_id"]
+            referencedRelation: "artifacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_chat_id_fkey"
+            columns: ["chat_id"]
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       subscriptions: {
         Row: {
           cancel_at: string | null
@@ -295,3 +365,4 @@ export interface Database {
     }
   }
 }
+

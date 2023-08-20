@@ -10,6 +10,9 @@ import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'react-hot-toast'
+import { getChats } from './actions'
+import MainLayout from './(main)/chat-layout'
+import { useEffect } from 'react'
 
 export const metadata: Metadata = {
   metadataBase: new URL(getURL()),
@@ -44,10 +47,6 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const cookieStore = cookies()
-  const session = await auth({ cookieStore })
-  const user = session?.user
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -61,10 +60,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <Providers attribute="class" defaultTheme="system" enableSystem>
           <NextTopLoader />
           <Toaster />
-          <div className="flex min-h-screen flex-col">
-            <Header user={user} />
-            <main className="flex flex-1 flex-col bg-muted/50">{children}</main>
-          </div>
+          <main className="w-full">{children}</main>
           <TailwindIndicator />
         </Providers>
       </body>

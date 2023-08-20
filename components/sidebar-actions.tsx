@@ -38,6 +38,7 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip'
+import { Pencil1Icon } from '@radix-ui/react-icons'
 
 interface SidebarActionsProps {
   chat: Chat
@@ -82,6 +83,19 @@ export function SidebarActions({
   return (
     <>
       <div className="space-x-1">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-6 w-6 p-0 hover:bg-background"
+              onClick={() => setShareDialogOpen(true)}
+            >
+              <Pencil1Icon />
+              <span className="sr-only">Share</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Rename chat</TooltipContent>
+        </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

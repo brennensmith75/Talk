@@ -8,8 +8,6 @@ import { IconArrowElbow } from '@/components/ui/icons'
 import { Model } from '@/constants/models'
 import { ModelSelector } from './model-selector'
 import { PersonaSelector } from './persona-selector'
-import { Persona } from '@/constants/personas'
-import { usePersonaStore } from '../lib/usePersonaStore'
 
 export interface PromptProps
   extends Pick<UseChatHelpers, 'input' | 'setInput'> {
@@ -61,6 +59,11 @@ export function PromptForm({
       ref={formRef}
     >
       <div className="relative flex w-full flex-row bg-background sm:rounded-md sm:border sm:px-4">
+        {/* <div className="mt-4 flex gap-2">
+          <PersonaSelector user={user} />
+        </div>
+
+        <div className="right-6 top-4 flex justify-center gap-2 absolute"> */}
         <div className="absolute bottom-0 right-2 flex gap-2 sm:relative sm:mt-4">
           <PersonaSelector user={user} />
         </div>

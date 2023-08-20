@@ -78,6 +78,10 @@ const RenderFunctionMessage = ({ message }: ChatMessageProps) => {
       .trim()
       ?.replace(/\n\s*\n\s*\n/g, '\n\n')
 
+    if (!extract) {
+      return 'There was an issue processing the latest search result. Please try again.'
+    }
+
     return (
       <div className="prose dark:prose-invert">
         <div
@@ -86,7 +90,7 @@ const RenderFunctionMessage = ({ message }: ChatMessageProps) => {
             isOpen ? 'max-h-screen' : 'max-h-72'
           )}
         >
-          <Link href={result.url} target="_blank" className="font-medium">
+          <Link href={result?.url} target="_blank" className="font-medium">
             {result?.title}
           </Link>
           :<p className="whitespace-pre-line">{extract}</p>

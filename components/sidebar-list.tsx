@@ -1,13 +1,37 @@
-import { getChats, removeChat, shareChat } from '@/app/actions'
+'use client'
+
+import { removeChat, shareChat } from '@/app/actions'
 import { SidebarActions } from '@/components/sidebar-actions'
 import { SidebarItem } from '@/components/sidebar-item'
+import { Chat } from '@/lib/types'
+import { useEffect, useState } from 'react'
 
 export interface SidebarListProps {
   userId?: string
+  serverChats: Chat[]
 }
 
-export async function SidebarList({ userId }: SidebarListProps) {
-  const chats = await getChats(userId)
+export function SidebarList({ userId, serverChats }: SidebarListProps) {
+  const [chats, setChats] = useState<Chat[]>(serverChats)
+
+  useEffect(() => {
+    // const channel = supabaseClient
+    //   .channel('realtime-posts')
+    //   .on(
+    //     'postgres_changes',
+    //     {
+    //       event: '*',
+    //       schema: 'public',
+    //       table: 'chats'
+    //     },
+    //     payload => console.log(payload)
+    //   )
+    //   .subscribe()
+    // console.log('hitttt')
+    // return () => {
+    //   supabaseClient.removeChannel(channel)
+    // }
+  }, [])
 
   return (
     <div className="flex-1 overflow-auto">

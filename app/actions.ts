@@ -8,7 +8,6 @@ import {
 } from '@supabase/auth-helpers-nextjs'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 import { Persona } from '@/constants/personas'
 import { type Chat } from '@/lib/types'

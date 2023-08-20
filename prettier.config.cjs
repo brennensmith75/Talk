@@ -7,6 +7,7 @@ module.exports = {
   arrowParens: 'avoid',
   tabWidth: 2,
   trailingComma: 'none',
+  plugins: ['prettier-plugin-tailwindcss'],
   importOrder: [
     '^(react/(.*)$)|^(react$)',
     '^(next/(.*)$)|^(next$)',

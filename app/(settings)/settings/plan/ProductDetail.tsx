@@ -3,13 +3,13 @@
 import { Session } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Button } from '../../../components/ui/button'
-import { Card, CardHeader, CardTitle } from '../../../components/ui/card'
-import { Database } from '../../../lib/db_types'
-import { postData } from '../../../lib/helpers'
-import { getStripe } from '../../../lib/stripe-client'
+import { Button } from '../../../../components/ui/button'
+import { Card, CardHeader, CardTitle } from '../../../../components/ui/card'
+import { Database } from '../../../../lib/db_types'
+import { postData } from '../../../../lib/helpers'
+import { getStripe } from '../../../../lib/stripe-client'
 import { format } from 'date-fns'
-import { cn } from '../../../lib/utils'
+import { cn } from '../../../../lib/utils'
 
 type Subscription = Database['public']['Tables']['subscriptions']['Row']
 type Product = Database['public']['Tables']['products']['Row']

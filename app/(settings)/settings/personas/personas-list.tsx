@@ -3,9 +3,9 @@
 import { Button } from '@/components/ui/button'
 import { PlusIcon } from '@radix-ui/react-icons'
 import React from 'react'
-import { getPersonas } from '../../actions'
+import { getPersonas } from '../../../actions'
 import { PersonaForm } from './persona-form'
-import { Persona } from '../../../constants/personas'
+import { Persona } from '../../../../constants/personas'
 
 interface PersonaListProps {
   user: any

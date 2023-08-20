@@ -12,14 +12,14 @@ import {
   PromptBodyField,
   PromptEmojiField,
   PromptNameField
-} from '../../../components/profile-form-fields'
+} from '../../../../components/profile-form-fields'
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle
-} from '../../../components/ui/card'
-import { createOrUpdatePersona, removePersona } from '../../actions'
+} from '../../../../components/ui/card'
+import { createOrUpdatePersona, removePersona } from '../../../actions'
 
 export function PersonaForm({
   user,
@@ -134,7 +134,9 @@ export function PersonaForm({
             <CardTitle>
               {prompt.emoji} {prompt.prompt_name}
             </CardTitle>
-            <CardDescription>{prompt.prompt_body}</CardDescription>
+            <CardDescription className="whitespace-pre-line">
+              {prompt.prompt_body}
+            </CardDescription>
           </div>
           <Button variant={'outline'} type="button" onClick={onEdit}>
             Edit
