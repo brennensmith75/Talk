@@ -1,6 +1,5 @@
 {
   "recommendations": [
-    "heybourn.headwind",
     "esbenp.prettier-vscode",
     "pflannery.vscode-versionlens",
     "bradlc.vscode-tailwindcss"
