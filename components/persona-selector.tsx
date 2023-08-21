@@ -177,7 +177,7 @@ export function PersonaSelector({ user, ...props }: PersonaSelectorProps) {
                 <Button
                   onClick={e => {
                     e.preventDefault()
-                    router.push('/')
+                    router.push('/settings/personas')
                   }}
                   variant="link"
                   className="h-auto p-0 text-sm"
