@@ -204,7 +204,7 @@ export default function ChatLayout({
         />
       </div>
 
-      <div className="sticky top-0 z-40 flex items-center gap-x-6 p-4 shadow-sm sm:px-6">
+      <div className="sticky top-0 z-40 flex items-center gap-x-6 border-b p-4 sm:px-6">
         <button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
@@ -291,7 +291,7 @@ const Sidebar = ({
   return (
     <>
       <div className="flex h-full flex-col overflow-y-hidden border-r bg-white dark:bg-black">
-        <div className="flex h-16 items-center justify-between border-b pl-4 pr-3">
+        <div className="flex items-center justify-between border-b py-4 pl-4 pr-3">
           <div className="flex items-center">
             <h1 className="ml-2 font-semibold">
               <Link href="/">🐣 Smol Talk</Link>
