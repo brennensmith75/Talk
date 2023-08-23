@@ -13,8 +13,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup GitHub CLI
-        run: |
-          gh auth login --with-token ${{ secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
+        run: echo "${{ secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}" | gh auth login --with-token
 
       - name: Create PR to Production Repo
         run: |
