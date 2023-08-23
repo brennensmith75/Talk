@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - production
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
+      AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase local development setup
+        run: supabase start
+
+      - name: Lint Supabase
+        run: supabase db lint
+
+      - name: Verify generated types are checked in
+        run: |
+          supabase gen types typescript --local --schema public > ./lib/db_types.ts
+          if ! git diff --ignore-space-at-eol --exit-code --quiet ./lib/db_types.ts; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff
+            exit 1
+          fi

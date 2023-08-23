@@ -1,0 +1,26 @@
+name: Create PR to production Repo on Push to main
+
+on:
+  push:
+    branches:
+      - main # Trigger this workflow on push to main branch
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup GitHub CLI
+        run: |
+          gh auth login --with-token ${{ secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
+
+      - name: Create PR to Production Repo
+        run: |
+          # Get the latest commit message
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          COMMIT_TITLE=$(git log -1 --pretty=%s)
+
+          # Create PR with commit details
+          gh pr create --repo https://github.com/smol-ai/talk --base production --head main --title "[PRODUCTION] $COMMIT_TITLE" --body "$COMMIT_MESSAGE"
