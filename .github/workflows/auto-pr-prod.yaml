@@ -1,0 +1,39 @@
+name: Create PR to production Repo on Push to main
+
+on:
+  push:
+    branches:
+      - main # Trigger this workflow on push to main branch
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup GitHub CLI
+        run: echo "${{ secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}" | gh auth login --with-token
+
+      - name: Check if PR exists
+        id: check-pr
+        run: |
+          # Check for existing PRs with the same head branch
+          EXISTING_PR=$(gh pr list --state open --base production --head main --json number --jq '.[0].number')
+          echo "EXISTING_PR=$EXISTING_PR" >> $GITHUB_ENV
+          if [ -z "$EXISTING_PR" ]; then
+            echo "No existing PR found, create a new one."
+            echo "CREATE_PR=true" >> $GITHUB_ENV
+          else
+            echo "Existing PR found with number $EXISTING_PR, skipping PR creation."
+            echo "CREATE_PR=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create PR to Production Repo
+        if: env.CREATE_PR == 'true'
+        run: |
+          # Get the latest commit message
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          COMMIT_TITLE=$(git log -1 --pretty=%s)
+          # Create PR with commit details
+          gh pr create --repo https://github.com/smol-ai/talk --base production --head main --title "[PRODUCTION] $COMMIT_TITLE" --body "$COMMIT_MESSAGE"
