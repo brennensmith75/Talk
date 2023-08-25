@@ -8,6 +8,16 @@ module.exports = {
     // https://vercel.com/docs/edge-network/redirects
     return [
       {
+        source: '/developer',
+        permanent: false,
+        destination: 'https://github.com/smol-ai/developer'
+      },
+      {
+        source: '/dev',
+        permanent: false,
+        destination: 'https://github.com/smol-ai/developer'
+      },
+      {
         source: '/godmode',
         permanent: false,
         destination: 'https://github.com/smol-ai/GodMode'
